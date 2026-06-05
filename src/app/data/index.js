@@ -24,19 +24,6 @@ import {
   SiVite,
 } from "react-icons/si";
 
-export const achievement = [
-  {
-    id: 1,
-    credentialId: "22313141341233",
-    title: "Full-Stack Web Development Masterclass",
-    organizer: "Udemy / Tech Academy",
-    image: "/images/certificate.jpg",
-    type: "Course",
-    category: "Web Development",
-    issuedDate: "JULY 2025",
-  },
-];
-
 export const skillset = [
   // --- Frontend ---
   { id: 1, name: "HTML", category: "Frontend", icon: <SiHtml5 className="size-5 text-orange-500" />, bgClass: "bg-orange-500/30" },
@@ -172,5 +159,49 @@ export const experiences = [
       "Delivered real-time troubleshooting to resolve hardware, software, and network disruptions across both physical and virtual testing environments.",
       "Performed dual roles as Proctor and Co-Proctor, rigorously verifying participant identities and monitoring academic integrity during assigned shifts.",
     ],
+  },
+];
+
+export const achievement = [
+  {
+    id: 2,
+    credentialId: "22313141341233",
+    title: "Testing Sertifikat Part 2",
+    organizer: "Udemy / Tech Academy",
+    image: "/images/certificate.jpg",
+    type: "Course",
+    category: "Web Development",
+    issuedDate: "JULY 2025",
+  },
+  {
+    id: 1,
+    credentialId: "22313141341233",
+    title: "Full-Stack Web Development Masterclass",
+    organizer: "Udemy / Tech Academy",
+    image: "/images/certificate.jpg",
+    type: "Course",
+    category: "Web Development",
+    issuedDate: "JULY 2025",
+  },
+];
+
+export const gears = [
+  {
+    id: 2,
+    brand: "Vortexseries",
+    model: "Mono 75",
+    image: "/images/vortexseries-mono75.jpg",
+    category: "Video",
+    description: "Budget mechanical keyboard with soothing sound.",
+    link: "https://tk.tokopedia.com/ZSQ8TUBYF/",
+  },
+  {
+    id: 1,
+    brand: "Asus",
+    model: "Gaming V16",
+    image: "/images/asus-v16.jpg",
+    category: "Computer",
+    description: "Good budget gaming laptop.",
+    link: "https://tk.tokopedia.com/ZSQ83jYbH/",
   },
 ];
