@@ -1,65 +1,80 @@
-import Image from "next/image";
+"use client";
+
+import { supabase } from "@/lib/supabase";
+import { useState } from "react";
+import SideNav from "@/components/custom/SideNav";
+import { PiCode } from "react-icons/pi";
+import { skillset } from "./data";
 
 export default function Home() {
+  const [activeFilter, setActiveFilter] = useState("ALL");
+
+  const categories = ["ALL", ...new Set(skillset.map((skill) => skill.category))];
+
+  const filteredSkills = activeFilter === "ALL" ? skillset : skillset.filter((skill) => skill.category === activeFilter);
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="max-w-7xl w-full mx-auto grid grid-cols-12 gap-8">
+      <SideNav />
+      <div className="col-span-9 w-full space-y-10">
+        <section className="flex flex-col gap-2">
+          <h1 className="text-4xl font-medium tracking-tighter">Hey There It&apos;s Reza 👋</h1>
+          <span className="text-neutral-500 text-lg">Based in Bandung, Indonesia</span>
+          <div className="text-neutral-300 flex flex-col gap-6 text-base mt-4">
+            <p>
+              I&apos;m a full-stack web developer, UI designer, and content creator focused on building impactful digital solutions. My expertise includes developing modern web and mobile platforms using Laravel, React/Next.js.
+              (JavaScript), Tailwind CSS, dan Flutter.
+            </p>
+            <p>
+              I prioritize structured system architecture and clean, minimalist interface design that aligns with business objectives. Drawing on my IT leadership experience, I ensure each project is executed functionally and logically,
+              providing an optimal user experience.
+            </p>
+          </div>
+        </section>
+
+        <hr className="border-neutral-700" />
+
+        <section className="flex flex-col space-y-4">
+          <h2 className="text-2xl flex items-center gap-2 text-neutral-100">
+            <PiCode className="size-6" />
+            Skillset & Tools
+          </h2>
+          <p className="text-neutral-400 text-lg">All of the tools and skills that I use</p>
+
+          {/* Filter */}
+          <div className="flex flex-wrap items-center gap-2 font-medium text-neutral-500">
+            {categories.map((category) => {
+              const isActive = activeFilter === category;
+              const count = category === "ALL" ? skillset.length : skillset.filter((s) => s.category === category).length;
+
+              return (
+                <button
+                  key={category}
+                  onClick={() => setActiveFilter(category)}
+                  type="button"
+                  className={`py-1 px-3 text-xs rounded-full flex gap-2 items-center cursor-pointer transition-colors duration-300 ${
+                    isActive ? "bg-emerald-500/30 text-white border border-emerald-500/30" : "bg-neutral-950 border border-neutral-700 hover:bg-neutral-800"
+                  }`}
+                >
+                  {category}
+                  <span className={`py-0.5 px-2 rounded-full text-[10px] ${isActive ? "bg-emerald-500 text-white" : "bg-neutral-800 text-neutral-400"}`}>{count}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Items */}
+          <div className="flex flex-wrap gap-2 pt-2">
+            {filteredSkills.map((skill) => (
+              <button key={skill.id} type="button" className={`flex items-center gap-2 border border-neutral-600 py-1.5 px-3 rounded-full transition-all duration-300 hover:-translate-y-1 ${skill.bgClass}`}>
+                {skill.icon}
+                <span className="text-sm font-medium text-neutral-200">{skill.name}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <hr className="border-neutral-700" />
+      </div>
     </div>
   );
 }
