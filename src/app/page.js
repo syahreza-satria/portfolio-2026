@@ -1,5 +1,7 @@
 "use client";
 
+// Tambahkan AnimatePresence pada import
+import { motion, AnimatePresence } from "framer-motion"; // Sesuaikan dengan setup Anda (bisa juga "motion/react")
 import { supabase } from "@/lib/supabase";
 import { useState } from "react";
 import SideNav from "@/components/custom/SideNav";
@@ -12,13 +14,15 @@ export default function Home() {
   const categories = ["ALL", ...new Set(skillset.map((skill) => skill.category))];
 
   const filteredSkills = activeFilter === "ALL" ? skillset : skillset.filter((skill) => skill.category === activeFilter);
+
   return (
     <div className="max-w-7xl w-full mx-auto grid grid-cols-12 gap-8">
       <SideNav />
-      <div className="col-span-9 w-full space-y-10">
+
+      <motion.div animate={{ y: "0%", opacity: 1 }} initial={{ y: "10%", opacity: 0 }} transition={{ duration: 0.8 }} className="col-span-9 w-full space-y-10 overflow-hidden">
         <section className="flex flex-col gap-2">
           <h1 className="text-4xl font-medium tracking-tighter">Hey There It&apos;s Reza 👋</h1>
-          <span className="text-neutral-500 text-lg">Based in Bandung, Indonesia</span>
+          <span className="text-neutral-400 text-lg">• Based in Bandung, Indonesia • Onsite</span>
           <div className="text-neutral-300 flex flex-col gap-6 text-base mt-4">
             <p>
               I&apos;m a full-stack web developer, UI designer, and content creator focused on building impactful digital solutions. My expertise includes developing modern web and mobile platforms using Laravel, React/Next.js.
@@ -40,7 +44,7 @@ export default function Home() {
           </h2>
           <p className="text-neutral-400 text-lg">All of the tools and skills that I use</p>
 
-          {/* Filter */}
+          {/* Filter Buttons */}
           <div className="flex flex-wrap items-center gap-2 font-medium text-neutral-500">
             {categories.map((category) => {
               const isActive = activeFilter === category;
@@ -62,19 +66,31 @@ export default function Home() {
             })}
           </div>
 
-          {/* Items */}
-          <div className="flex flex-wrap gap-2 pt-2">
-            {filteredSkills.map((skill) => (
-              <button key={skill.id} type="button" className={`flex items-center gap-2 border border-neutral-600 py-1.5 px-3 rounded-full transition-all duration-300 hover:-translate-y-1 ${skill.bgClass}`}>
-                {skill.icon}
-                <span className="text-sm font-medium text-neutral-200">{skill.name}</span>
-              </button>
-            ))}
-          </div>
+          {/* Items dengan Animasi */}
+          <motion.div layout className="flex flex-wrap gap-2 pt-2">
+            <AnimatePresence mode="popLayout">
+              {filteredSkills.map((skill) => (
+                <motion.button
+                  key={skill.id}
+                  layout="position"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.25, type: "spring", stiffness: 200, damping: 20 }}
+                  whileHover={{ y: -4 }}
+                  type="button"
+                  className={`flex items-center gap-2 border border-neutral-600 py-1.5 px-3 rounded-full hover:-translate-y-1 w-fit whitespace-nowrap ${skill.bgClass}`}
+                >
+                  {skill.icon}
+                  <span className="text-sm font-medium text-neutral-200">{skill.name}</span>
+                </motion.button>
+              ))}
+            </AnimatePresence>
+          </motion.div>
         </section>
 
-        <hr className="border-neutral-700" />
-      </div>
+        <motion.hr layout="position" className="border-neutral-700" />
+      </motion.div>
     </div>
   );
 }
