@@ -7,6 +7,8 @@ import { usePathname } from "next/navigation";
 import { PiHouse, PiUser, PiCertificate, PiProjectorScreenChart, PiFolderUser, PiLaptop } from "react-icons/pi";
 import { RiVerifiedBadgeFill } from "react-icons/ri";
 import RotatingText from "../RotatingText";
+import { ArrowRight } from "lucide-react";
+import ShinyText from "../ShinyText";
 
 const SideNav = () => {
   const pathname = usePathname();
@@ -30,9 +32,9 @@ const SideNav = () => {
           SYAHREZA SATRIA <RiVerifiedBadgeFill className="size-5 text-blue-500" />
         </h1>
         <p className="flex items-center gap-2 bg-green-500/20 px-6 py-1 rounded-2xl border border-green-500">
-          <span class="relative flex size-3">
-            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
-            <span class="relative inline-flex size-3 rounded-full bg-green-500"></span>
+          <span className="relative flex size-3">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
+            <span className="relative inline-flex size-3 rounded-full bg-green-500"></span>
           </span>
 
           <RotatingText
@@ -63,12 +65,14 @@ const SideNav = () => {
             <Link
               key={index}
               href={item.path}
-              className={`flex font-medium items-center py-2.5 px-4 justify-start w-full gap-3 transition-colors duration-300 rounded-xl group ${
-                isActive ? "bg-neutral-800/40 text-gray-100" : "text-neutral-400 hover:bg-neutral-800/40 hover:text-gray-100"
-              }`}
+              className={`flex items-center font-medium py-2.5 px-4 justify-between w-full transition-colors duration-300 rounded-xl group ${isActive ? "bg-neutral-800/40 text-gray-100" : "text-neutral-400 hover:bg-neutral-800/40 hover:text-gray-100"}`}
             >
-              <span className={`transition-colors ${isActive ? "text-gray-300" : "text-neutral-500 group-hover:text-gray-300"}`}>{item.icon}</span>
-              {item.name}
+              <div className="flex gap-3 items-center ">
+                <span className={`transition-colors ${isActive ? "text-gray-300" : "text-neutral-500 group-hover:text-gray-300"}`}>{item.icon}</span>
+
+                {isActive ? <ShinyText text={item.name} speed={2} delay={0} color="#b5b5b5" shineColor="#ffffff" spread={120} direction="left" yoyo={false} pauseOnHover={false} disabled={false} /> : <span>{item.name}</span>}
+              </div>
+              {isActive ? <ArrowRight className="size-4 text-neutral-400" /> : ""}
             </Link>
           );
         })}
