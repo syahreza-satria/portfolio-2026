@@ -1,17 +1,19 @@
 "use client";
 
+import { motion } from "motion/react";
 import { PiBriefcase, PiCode } from "react-icons/pi";
 import SideNav from "../../components/custom/SideNav";
 import ExperienceCard from "@/components/custom/ExperienceCard";
 import { educations, experiences } from "../data";
 import EducationCard from "@/components/custom/EducationCard";
+import { child, parent } from "../../../animation";
 
 export default function Home() {
   return (
     <div className="max-w-7xl w-full mx-auto grid grid-cols-12 gap-8">
       <SideNav />
 
-      <div className="col-span-9 w-full space-y-6 pb-16">
+      <motion.div animate={{ y: "0%", opacity: 1 }} initial={{ y: "10%", opacity: 0 }} transition={{ duration: 0.8 }} className="col-span-9 w-full space-y-6 pb-16">
         <section className="flex flex-col gap-2">
           <h1 className="text-2xl font-medium tracking-tighter">About</h1>
           <span className="text-neutral-400 text-lg">A brief introduction to who I am.</span>
@@ -44,13 +46,15 @@ export default function Home() {
             <p className="text-neutral-400 text-lg">My work journey.</p>
           </div>
 
-          <div className="flex flex-col items-start space-y-4">
+          <motion.div variants={parent} initial="hidden" animate="show" className="flex flex-col items-start space-y-4 ">
             {[...experiences]
               .sort((a, b) => a.id - b.id)
               .map((exp) => (
-                <ExperienceCard key={exp.id} data={exp} />
+                <motion.div variants={child} key={exp.id} className="w-full">
+                  <ExperienceCard data={exp} />
+                </motion.div>
               ))}
-          </div>
+          </motion.div>
         </section>
 
         <hr className="border-neutral-700" />
@@ -72,7 +76,7 @@ export default function Home() {
               ))}
           </div>
         </section>
-      </div>
+      </motion.div>
     </div>
   );
 }
