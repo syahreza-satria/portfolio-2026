@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"; // Sesuaikan dengan set
 import { supabase } from "@/lib/supabase";
 import { useState } from "react";
 import SideNav from "@/components/custom/SideNav";
-import { PiCode } from "react-icons/pi";
+import { PiCode, PiVideo } from "react-icons/pi";
 import { skillset } from "./data";
 
 export default function Home() {
@@ -19,7 +19,7 @@ export default function Home() {
     <div className="max-w-7xl w-full mx-auto grid grid-cols-12 gap-8">
       <SideNav />
 
-      <motion.div animate={{ y: "0%", opacity: 1 }} initial={{ y: "10%", opacity: 0 }} transition={{ duration: 0.8 }} className="col-span-9 w-full space-y-10 overflow-hidden">
+      <motion.div animate={{ y: "0%", opacity: 1 }} initial={{ y: "10%", opacity: 0 }} transition={{ duration: 0.8 }} className="col-span-9 w-full space-y-6 overflow-hidden">
         <section className="flex flex-col gap-2">
           <h1 className="text-4xl font-medium tracking-tighter">Hey There It&apos;s Reza 👋</h1>
           <span className="text-neutral-400 text-lg">• Based in Bandung, Indonesia • Onsite</span>
@@ -37,12 +37,12 @@ export default function Home() {
 
         <hr className="border-neutral-700" />
 
-        <section className="flex flex-col space-y-4">
+        <section className="flex flex-col space-y-1">
           <h2 className="text-2xl flex items-center gap-2 text-neutral-100">
             <PiCode className="size-6" />
             Skillset & Tools
           </h2>
-          <p className="text-neutral-400 text-lg">All of the tools and skills that I use</p>
+          <p className="text-neutral-400 text-lg mb-3">All of the tools and skills that I use</p>
 
           {/* Filter Buttons */}
           <div className="flex flex-wrap items-center gap-2 font-medium text-neutral-500">
@@ -89,7 +89,26 @@ export default function Home() {
           </motion.div>
         </section>
 
-        <motion.hr layout="position" className="border-neutral-700" />
+        <motion.hr layout="position" className="border-neutral-700 my-4" />
+
+        <section className="flex flex-col space-y-6 pt-4">
+          <h2 className="flex gap-2 text-2xl items-center text-neutral-100 font-medium tracking-tight">
+            <PiVideo className="size-6 text-green-500" />
+            Latest Content
+          </h2>
+
+          <div className="relative w-full aspect-video rounded-3xl overflow-hidden border border-neutral-700/50 bg-neutral-900/50 shadow-2xl ring-1 ring-white/5">
+            <iframe
+              className="absolute top-0 left-0 w-full h-full"
+              src="https://www.youtube.com/embed/uN6TN7PmXmE?si=fo56jnavGzr6OuW_&amp;controls=0"
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+            ></iframe>
+          </div>
+        </section>
       </motion.div>
     </div>
   );
