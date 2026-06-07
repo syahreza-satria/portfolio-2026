@@ -1,36 +1,151 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🚀 Syahreza Satria's Developer Portfolio (2026 Edition)
 
-## Getting Started
+Welcome to the official repository of **Syahreza Satria's Portfolio**, a modern, responsive, and dynamic web application showcasing skills, professional experience, achievements, and projects. 
 
-First, run the development server:
+This portfolio features an immersive dark-mode aesthetic, micro-animations, and full **CRUD (Create, Read, Update, Delete) project management** capabilities synced in real-time with a database backend.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🛠️ Built With
+
+The project is built on a modern frontend/backend stack:
+
+*   **Framework**: [Next.js 16](https://nextjs.org/) (React 19 App Router)
+*   **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+*   **Database & Authentication**: [Supabase](https://supabase.com/) (`@supabase/supabase-js`)
+*   **Animations**: [Motion](https://motion.dev/) (Framer Motion)
+*   **Icons**: [React Icons](https://react-icons.github.io/react-icons/) & [Lucide React](https://lucide.dev/)
+*   **UI Components**: [Shadcn UI](https://ui.shadcn.com/) & [Radix UI](https://www.radix-ui.com/)
+
+---
+
+## ✨ Key Features
+
+1.  **Sleek Modern UI/UX**: Designed with vibrant custom gradient accents, glassmorphic navigations, interactive hover micro-animations, rotating text components, and shiny text highlights.
+2.  **Adaptive Navigation**: Uses a robust sticky sidebar on desktop screens and a floating dock/header for mobile and tablet devices.
+3.  **Supabase-Powered Dynamic Projects Showcase**:
+    *   **Search**: Instant client-side search across project titles and descriptions.
+    *   **Categorization & Filters**: Dynamic tabs to filter projects by Category (Full-Stack Web, UI/UX Design, Mobile Development, etc.) and Type (Web App, Mobile App, Design, etc.).
+    *   **Immersive Lightbox Preview**: A spring-animated detail modal showing the project's cover image, description, detailed tech stack, source code link, and live demo link.
+4.  **Admin CRUD Panel**:
+    *   **Authentication**: Integrated Google OAuth via Supabase.
+    *   **Authorization**: Checks for the owner's email (`satriaeza221@gmail.com`) or specific admin roles to reveal admin actions.
+    *   **Real-time Modifying**: Interactive custom forms (`CrudModal`) to add, edit, or delete projects directly from the user interface.
+5.  **Interactive Skillset Filtering**: Filter skillset items (HTML, Laravel, React, Node.js, Flutter, Figma, etc.) interactively with layout spring animations.
+6.  **Additional Sections**:
+    *   **About**: Career journey, education timeline, and detailed experience breakdown.
+    *   **Achievements**: Certification details, categories, and credentials.
+    *   **Gears**: A curated setup listing hardware and design gear with reference store links.
+    *   **Contact**: Built-in functional contact form.
+
+---
+
+## 📂 Project Structure
+
+```text
+├── public/                # Static assets, branding, and images
+└── src/
+    ├── app/               # Next.js App Router paths
+    │   ├── about/         # Profile & resume info page
+    │   ├── achievement/   # Certificates showcase
+    │   ├── contact/       # Contact form & social connections
+    │   ├── gears/         # Workspace setup & tech specs
+    │   ├── projects/      # DB-connected projects page (with Admin CRUD)
+    │   └── data/          # Local static datasets (skills, experience, etc.)
+    ├── components/        # Shared components
+    │   ├── custom/        # Layout elements (SideNav, CrudModal, cards, etc.)
+    │   └── ui/            # Reusable UI primitives (Tabs, inputs, dropdowns)
+    └── lib/               # Utility functions (auth, Supabase client initialization)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 🚀 How to Run Locally
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Prerequisites
+Ensure you have the following installed on your machine:
+*   [Node.js](https://nodejs.org/) (v18.x or newer recommended)
+*   [NPM](https://www.npmjs.com/) or another package manager (Yarn, PNPM, Bun)
+*   A [Supabase](https://supabase.com/) account and project.
 
-## Learn More
+### 2. Clone the Repository
+```bash
+git clone https://github.com/syahreza-satria/portfolio-2026.git
+cd portfolio-2026
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 3. Setup Environment Variables
+Create a `.env` or `.env.local` file in the root directory and add your Supabase credentials:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-project-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 4. Create the Supabase Database Schema
+To support the dynamic projects page, execute the following SQL script inside your Supabase project's **SQL Editor**:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```sql
+create table projects (
+  id bigint generated by default as identity primary key,
+  title text not null,
+  description text not null,
+  image text,
+  type text not null,
+  category text not null,
+  techstack text[] default '{}'::text[],
+  demo_link text,
+  github text,
+  status boolean default false,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
 
-## Deploy on Vercel
+-- Enable RLS (Row Level Security)
+alter table projects enable row level security;
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+-- Create Policy to allow anyone to read projects
+create policy "Allow public read access" on projects
+  for select using (true);
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+-- Create Policy to allow authenticated admin to manage projects
+-- Note: Replace 'satriaeza221@gmail.com' with your actual admin email
+create policy "Allow admin full access" on projects
+  for all using (
+    auth.jwt() ->> 'email' = 'satriaeza221@gmail.com'
+  );
+```
+
+### 5. Setup Google OAuth in Supabase
+To enable the Admin CRUD features:
+1.  Go to **Supabase Dashboard** -> **Authentication** -> **Providers**.
+2.  Enable **Google** and enter your Google OAuth client ID and secret (obtained from the [Google Cloud Console](https://console.cloud.google.com/)).
+3.  Add the redirect URI provided by Supabase back into your Google Cloud console credentials.
+
+### 6. Install Dependencies
+```bash
+npm install
+```
+
+### 7. Run the Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) with your browser to view the portfolio.
+
+---
+
+## 📦 Production Deployment
+
+To build and run the optimized production bundle:
+
+```bash
+npm run build
+npm run start
+```
+
+You can easily deploy this repository on hosting platforms like [Vercel](https://vercel.com/), [Netlify](https://netlify.com/), or [Render](https://render.com/). Be sure to inject your environment variables (`NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`) in the platform settings.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - feel free to use and modify it for your own personal portfolio.
