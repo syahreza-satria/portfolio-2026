@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"; // Sesuaikan dengan set
 import { supabase } from "@/lib/supabase";
 import { useState } from "react";
 import SideNav from "@/components/custom/SideNav";
-import { PiCode, PiVideo } from "react-icons/pi";
+import { PiCode, PiVideo, PiDownload } from "react-icons/pi";
 import { skillset } from "./data";
 
 export default function Home() {
@@ -16,10 +16,10 @@ export default function Home() {
   const filteredSkills = activeFilter === "ALL" ? skillset : skillset.filter((skill) => skill.category === activeFilter);
 
   return (
-    <div className="max-w-7xl w-full mx-auto grid grid-cols-12 gap-8">
+    <div className="max-w-7xl w-full mx-auto grid grid-cols-1 sm:grid-cols-12 gap-6 sm:gap-8 px-4 sm:px-6">
       <SideNav />
 
-      <motion.div animate={{ y: "0%", opacity: 1 }} initial={{ y: "10%", opacity: 0 }} transition={{ duration: 0.8 }} className="col-span-9 w-full space-y-6 overflow-hidden">
+      <motion.div animate={{ y: 0, opacity: 1 }} initial={{ y: 20, opacity: 0 }} transition={{ type: "spring", stiffness: 100, damping: 20 }} className="col-span-1 sm:col-span-9 w-full space-y-6 overflow-hidden">
         <section className="flex flex-col gap-2">
           <h1 className="text-4xl font-medium tracking-tighter">Hey There It&apos;s Reza 👋</h1>
           <span className="text-neutral-400 text-lg">• Based in Bandung, Indonesia • Onsite</span>

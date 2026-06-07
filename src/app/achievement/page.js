@@ -1,132 +1,454 @@
 "use client";
 
-import { motion } from "motion/react";
-import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import SideNav from "../../components/custom/SideNav";
 import SpotlightCard from "@/components/SpotlightCard";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
-import { achievement } from "../data";
+import { ArrowUpRight, Plus, Edit, Trash2, X, Calendar, Award, Hash, ExternalLink, ShieldCheck } from "lucide-react";
 import { child, parent } from "../../../animation";
+import { useAuth } from "@/lib/auth";
+import CrudModal from "@/components/custom/CrudModal";
 
 export default function Achievement() {
-  // 1. State untuk menyimpan filter
+  // Format date
+  const formatMonthYear = (dateString) => {
+    if (!dateString) return "Present";
+
+    const date = new Date(dateString);
+
+    if (isNaN(date)) return dateString;
+
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  // --- 1. State Management ---
+  const [achievements, setAchievements] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  // 2. Mengambil data unik secara dinamis untuk dropdown
-  const uniqueTypes = ["All", ...new Set(achievement.map((item) => item.type))];
-  const uniqueCategories = ["All", ...new Set(achievement.map((item) => item.category))];
+  const { user, isAdmin } = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingAchievement, setEditingAchievement] = useState(null);
+  const [previewAchievement, setPreviewAchievement] = useState(null);
 
-  // 3. Logika Filter Data
-  const filteredAchievements = achievement.filter((achieve) => {
-    // Pencarian berdasarkan judul ATAU organizer
+  const achievementFields = [
+    { name: "title", label: "Title", required: true },
+    { name: "organizer", label: "Organizer", required: true },
+    { name: "credentialId", label: "Credential ID / License", required: false },
+    { name: "image", label: "Certificate Image", type: "image", required: false },
+    { name: "issuedDate", label: "Issued Date", type: "date", required: true },
+    { name: "type", label: "Type", type: "select", options: ["Certification", "Award", "Course", "Participation", "Professional", "other"], required: true },
+    { name: "category", label: "Category", type: "select", options: ["Tech", "Design", "Language", "Management", "Other"], required: true },
+  ];
+
+  const handleOpenAdd = () => {
+    setEditingAchievement(null);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEdit = (e, achieve) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setEditingAchievement(achieve);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async (e, id) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!confirm("Are you sure you want to delete this achievement?")) return;
+    try {
+      const { error } = await supabase.from("achievements").delete().eq("id", id);
+      if (error) throw error;
+      setAchievements((prev) => prev.filter((a) => a.id !== id));
+    } catch (err) {
+      alert("Error deleting: " + err.message);
+    }
+  };
+
+  const handleSave = async (formData) => {
+    const payload = {
+      title: formData.title,
+      organizer: formData.organizer,
+      credential_id: formData.credentialId,
+      image: formData.image,
+      issued_date: formData.issuedDate,
+      type: formData.type,
+      category: formData.category,
+    };
+
+    if (editingAchievement) {
+      const { data, error } = await supabase
+        .from("achievements")
+        .update(payload)
+        .eq("id", editingAchievement.id)
+        .select();
+      if (error) throw error;
+
+      const returnedRow = (data && data.length > 0) ? data[0] : { ...editingAchievement, ...payload, credential_id: payload.credential_id, issued_date: payload.issued_date };
+      const formatted = { ...returnedRow, credentialId: returnedRow.credential_id, issuedDate: returnedRow.issued_date };
+      setAchievements((prev) => {
+        const updated = prev.map((a) => (a.id === editingAchievement.id ? formatted : a));
+        return updated.sort((a, b) => new Date(b.issuedDate) - new Date(a.issuedDate));
+      });
+    } else {
+      const { data, error } = await supabase
+        .from("achievements")
+        .insert([payload])
+        .select();
+      if (error) throw error;
+
+      const returnedRow = (data && data.length > 0) ? data[0] : { id: Date.now(), ...payload, credential_id: payload.credential_id, issued_date: payload.issued_date };
+      const formatted = { ...returnedRow, credentialId: returnedRow.credential_id, issuedDate: returnedRow.issued_date };
+      setAchievements((prev) => {
+        const updated = [...prev, formatted];
+        return updated.sort((a, b) => new Date(b.issuedDate) - new Date(a.issuedDate));
+      });
+    }
+  };
+
+  // --- 2. Fetch Data dari Supabase ---
+  useEffect(() => {
+    const fetchAchievements = async () => {
+      try {
+        const { data, error } = await supabase.from("achievements").select("*").order("issued_date", { ascending: false }); // Mengurutkan berdasarkan tanggal terbit terbaru
+
+        if (error) throw error;
+
+        // Mapping data dari snake_case (DB) ke camelCase (UI)
+        const formattedData = data.map((item) => ({
+          ...item,
+          credentialId: item.credential_id,
+          issuedDate: item.issued_date,
+        }));
+
+        setAchievements(formattedData);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAchievements();
+  }, []);
+
+  // --- 3. Filter Logic ---
+  const uniqueTypes = ["All", ...new Set(achievements.map((item) => item.type))];
+  const uniqueCategories = ["All", ...new Set(achievements.map((item) => item.category))];
+
+  const filteredAchievements = achievements.filter((achieve) => {
     const matchesSearch = achieve.title.toLowerCase().includes(searchQuery.toLowerCase()) || achieve.organizer.toLowerCase().includes(searchQuery.toLowerCase());
-
-    // Pencarian berdasarkan dropdown
     const matchesType = selectedType === "All" || achieve.type === selectedType;
     const matchesCategory = selectedCategory === "All" || achieve.category === selectedCategory;
 
     return matchesSearch && matchesType && matchesCategory;
   });
 
+  // --- 4. Fungsi Render Konten (Untuk handle Loading & Error tanpa merusak layout) ---
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <div className="space-y-6">
+          {/* Header skeletons */}
+          <div className="space-y-2.5 animate-pulse">
+            <div className="h-4 w-40 bg-neutral-800/60 rounded-md" />
+            <div className="h-4.5 w-48 bg-neutral-800/60 rounded-md" />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-pulse">
+            {[1, 2, 3, 4, 5, 6].map((n) => (
+              <div key={n} className="rounded-3xl border border-neutral-800/80 bg-neutral-900/40 p-0 flex flex-col gap-3 h-[350px]">
+                {/* Image Placeholder */}
+                <div className="w-full aspect-[297/210] rounded-t-3xl bg-neutral-800/50" />
+                {/* Info Placeholders */}
+                <div className="px-4 py-2 flex flex-col grow gap-2.5">
+                  <div className="h-3 w-1/3 bg-neutral-800/60 rounded-md" />
+                  <div className="h-4 w-5/6 bg-neutral-800/60 rounded-md" />
+                  <div className="h-3.5 w-1/2 bg-neutral-800/40 rounded-md" />
+                  <div className="mt-auto pt-4 pb-2">
+                    <div className="flex gap-2 mb-4">
+                      <div className="h-5 w-16 bg-neutral-800/50 rounded-full" />
+                      <div className="h-5 w-16 bg-neutral-800/50 rounded-full" />
+                    </div>
+                    <hr className="border-neutral-800/80 mb-3" />
+                    <div className="h-3 w-24 bg-neutral-800/40 rounded" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    if (error) {
+      return <div className="text-center py-20 text-red-500 bg-red-500/10 rounded-xl border border-red-500/20">Error: {error}</div>;
+    }
+
+    return (
+      <>
+        {/* Filter Section */}
+        <div className="flex flex-col md:flex-row gap-4 justify-between w-full">
+          <Input
+            type="text"
+            placeholder="Search title or organizer..."
+            className="bg-neutral-800 border-neutral-700 w-full md:max-w-xs text-neutral-200 focus-visible:ring-emerald-500/50"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+
+          <div className="flex gap-3 w-full md:w-auto">
+            <Select value={selectedType} onValueChange={setSelectedType}>
+              <SelectTrigger className="w-full md:w-37.5 bg-neutral-800 border-neutral-700 text-neutral-200 focus:ring-emerald-500/50">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-200">
+                {uniqueTypes.map((type) => (
+                  <SelectItem key={type} value={type} className="focus:bg-neutral-700 focus:text-white cursor-pointer">
+                    {type === "All" ? "All Types" : type}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-full md:w-40 bg-neutral-800 border-neutral-700 text-neutral-200 focus:ring-emerald-500/50">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-200">
+                {uniqueCategories.map((category) => (
+                  <SelectItem key={category} value={category} className="focus:bg-neutral-700 focus:text-white cursor-pointer">
+                    {category === "All" ? "All Categories" : category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <p className="text-neutral-400 font-medium text-sm">Showing {filteredAchievements.length} achievements</p>
+
+        {/* List Section */}
+        <motion.div variants={parent} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[...filteredAchievements].map((achieve) => (
+            <motion.div variants={child} key={achieve.id} className="h-full">
+              {/* Diperbaiki p-0! menjadi !p-0 */}
+              <SpotlightCard
+                onClick={() => setPreviewAchievement(achieve)}
+                className="custom-spotlight-card !p-0 flex flex-col gap-3 rounded-3xl h-full group relative cursor-pointer hover:border-neutral-700 transition-all duration-300"
+                spotlightColor="rgba(0, 229, 255, 0.15)"
+              >
+                {isAdmin && (
+                  <div className="absolute top-3 right-3 z-20 flex gap-2">
+                    <button
+                      onClick={(e) => handleOpenEdit(e, achieve)}
+                      className="p-1.5 rounded-lg bg-neutral-900/80 hover:bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-800 backdrop-blur transition-all cursor-pointer"
+                      title="Edit Achievement"
+                    >
+                      <Edit className="size-3.5" />
+                    </button>
+                    <button
+                      onClick={(e) => handleDelete(e, achieve.id)}
+                      className="p-1.5 rounded-lg bg-neutral-900/80 hover:bg-red-950/80 text-neutral-300 hover:text-red-405 border border-neutral-800 hover:border-red-900 backdrop-blur transition-all cursor-pointer"
+                      title="Delete Achievement"
+                    >
+                      <Trash2 className="size-3.5" />
+                    </button>
+                  </div>
+                )}
+                <div className="relative w-full aspect-[297/210] rounded-t-3xl overflow-hidden border-b border-neutral-700/50">
+                  {achieve.image && <Image src={achieve.image} alt={achieve.title} fill loading="eager" className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-w-7xl) 33vw, 100vw" priority={false} />}
+                </div>
+
+                <div className="px-4 py-2 flex flex-col grow">
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-sm font-mono text-neutral-500 tracking-wider">{achieve.credentialId}</span>
+                    <h3 className="text-white font-medium tracking-tight leading-snug line-clamp-2">{achieve.title}</h3>
+                    <p className="text-neutral-400 text-sm">{achieve.organizer}</p>
+                  </div>
+
+                  <div className="mt-auto flex flex-col pt-4 pb-2">
+                    <div className="flex w-full flex-wrap justify-start gap-2 mb-4">
+                      <Badge variant="secondary" className="text-xs bg-neutral-800 text-neutral-300 border-neutral-700">
+                        {achieve.type}
+                      </Badge>
+                      <Badge variant="secondary" className="text-xs bg-neutral-800 text-neutral-300 border-neutral-700">
+                        {achieve.category}
+                      </Badge>
+                    </div>
+
+                    <div>
+                      <hr className="border-neutral-700/80 mb-3" />
+                      <span className="text-neutral-500 text-[11px] font-semibold tracking-widest uppercase">ISSUED ON {formatMonthYear(achieve.issued_date)}</span>
+                    </div>
+                  </div>
+                </div>
+              </SpotlightCard>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Empty State */}
+        {filteredAchievements.length === 0 && <div className="w-full text-center py-12 text-neutral-500 bg-neutral-900/20 rounded-xl border border-neutral-800 border-dashed">No achievements found matching your criteria.</div>}
+      </>
+    );
+  };
+
   return (
-    <div className="max-w-7xl w-full mx-auto grid grid-cols-12 gap-8">
+    <div className="max-w-7xl w-full mx-auto grid grid-cols-1 sm:grid-cols-12 gap-6 sm:gap-8 px-4 sm:px-6">
       <SideNav />
 
-      <motion.div animate={{ y: "0%", opacity: 1 }} initial={{ y: "10%", opacity: 0 }} transition={{ duration: 0.8 }} className="col-span-9 w-full space-y-6 pb-16">
-        <section className="flex flex-col gap-2">
-          <h1 className="text-2xl font-medium tracking-tighter">Achievement</h1>
-          <p className="text-neutral-400 text-base md:text-lg leading-relaxed">A curated showcase of certifications and milestones reflecting my ongoing commitment to professional growth and technical excellence.</p>
+      <motion.div animate={{ y: 0, opacity: 1 }} initial={{ y: 20, opacity: 0 }} transition={{ type: "spring", stiffness: 100, damping: 20 }} className="col-span-1 sm:col-span-9 w-full space-y-6 pb-16">
+        <section className="flex justify-between items-center gap-4 w-full">
+          <div className="flex flex-col gap-2">
+            <h1 className="text-2xl font-medium tracking-tighter">Achievement</h1>
+            <p className="text-neutral-400 text-base md:text-lg leading-relaxed">A curated showcase of certifications and milestones reflecting my ongoing commitment to professional growth and technical excellence.</p>
+          </div>
+          {isAdmin && (
+            <button
+              onClick={handleOpenAdd}
+              className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-sm px-4 py-2.5 rounded-xl transition-all cursor-pointer shrink-0 shadow-lg shadow-emerald-600/10 active:scale-95"
+            >
+              <Plus className="size-4" />
+              <span>Add Achievement</span>
+            </button>
+          )}
         </section>
 
         <hr className="border-neutral-500 border-dashed" />
 
-        <section className="space-y-6">
-          {/* Filter */}
-          <div className="flex flex-col md:flex-row gap-4 justify-between w-full">
-            <Input
-              type="text"
-              placeholder="Search title or organizer..."
-              className="bg-neutral-800 border-neutral-700 w-full md:max-w-xs text-neutral-200 focus-visible:ring-emerald-500/50"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+        <section className="space-y-6">{renderContent()}</section>
 
-            <div className="flex gap-3 w-full md:w-auto">
-              <Select value={selectedType} onValueChange={setSelectedType}>
-                <SelectTrigger className="w-full md:w-37.5 bg-neutral-800 border-neutral-700 text-neutral-200 focus:ring-emerald-500/50">
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-200">
-                  {uniqueTypes.map((type) => (
-                    <SelectItem key={type} value={type} className="focus:bg-neutral-700 focus:text-white cursor-pointer">
-                      {type === "All" ? "All Types" : type}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+        <CrudModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          title={editingAchievement ? "Edit Achievement" : "Add Achievement"}
+          onSubmit={handleSave}
+          initialData={editingAchievement}
+          fields={achievementFields}
+        />
 
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-full md:w-40 bg-neutral-800 border-neutral-700 text-neutral-200 focus:ring-emerald-500/50">
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-200">
-                  {uniqueCategories.map((category) => (
-                    <SelectItem key={category} value={category} className="focus:bg-neutral-700 focus:text-white cursor-pointer">
-                      {category === "All" ? "All Categories" : category}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+        {/* Certificate Preview Lightbox / Details Modal */}
+        <AnimatePresence>
+          {previewAchievement && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                onClick={() => setPreviewAchievement(null)}
+                className="absolute inset-0 bg-neutral-950/80 backdrop-blur-md"
+              />
 
-          <p className="text-neutral-400 font-medium text-sm">Showing {filteredAchievements.length} achievements</p>
-
-          <motion.div variants={parent} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[...filteredAchievements]
-              .sort((a, b) => a.id - b.id)
-              .map((achieve) => (
-                <motion.div variants={child} key={achieve.id} className="h-full">
-                  <SpotlightCard className="custom-spotlight-card p-0! flex flex-col gap-3 rounded-3xl h-full group" spotlightColor="rgba(0, 229, 255, 0.15)">
-                    <div className="relative w-full aspect-297/210 rounded-t-3xl overflow-hidden border-b border-neutral-700/50">
-                      <Image src={achieve.image} alt={achieve.title} fill loading="eager" className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-w-7xl) 33vw, 100vw" priority={false} />
+              {/* Modal Box */}
+              <motion.div
+                initial={{ scale: 0.92, opacity: 0, y: 0 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ y: 80, opacity: 0, scale: 0.98 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 350,
+                  damping: 28,
+                  exit: { type: "tween", ease: "easeIn", duration: 0.2 }
+                }}
+                className="relative bg-[#18181b] border border-neutral-850 rounded-3xl w-full max-w-5xl overflow-hidden shadow-2xl z-10 flex flex-col md:flex-row max-h-[90vh] md:h-[500px]"
+              >
+                {/* Left Side: Image Preview */}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1, duration: 0.4, ease: "easeOut" }}
+                  className="w-full md:w-[65%] bg-white flex items-center justify-center relative min-h-[300px] md:min-h-0"
+                >
+                  {previewAchievement.image ? (
+                    <div className="relative w-full h-full">
+                      <Image
+                        src={previewAchievement.image}
+                        alt={previewAchievement.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-w-5xl) 65vw, 100vw"
+                        priority
+                      />
                     </div>
-
-                    <div className="px-4 py-2 flex flex-col grow">
-                      <div className="flex flex-col gap-1.5">
-                        <span className="text-sm font-mono text-neutral-500 tracking-wider">{achieve.credentialId}</span>
-                        <h3 className="text-white font-medium tracking-tight leading-snug line-clamp-2">{achieve.title}</h3>
-                        <p className="text-neutral-400 text-sm">{achieve.organizer}</p>
-                      </div>
-
-                      <div className="mt-auto flex flex-col pt-4 pb-2">
-                        <div className="flex w-full flex-wrap justify-start gap-2 mb-4">
-                          <Badge variant="secondary" className="text-xs bg-neutral-800 text-neutral-300 border-neutral-700">
-                            {achieve.type}
-                          </Badge>
-                          <Badge variant="secondary" className="text-xs bg-neutral-800 text-neutral-300 border-neutral-700">
-                            {achieve.category}
-                          </Badge>
-                        </div>
-
-                        <div>
-                          <hr className="border-neutral-700/80 mb-3" />
-                          <span className="text-neutral-500 text-[11px] font-semibold tracking-widest uppercase">ISSUED ON {achieve.issuedDate}</span>
-                        </div>
-                      </div>
+                  ) : (
+                    <div className="text-center py-12 text-neutral-500 flex flex-col items-center gap-3 w-full bg-neutral-900 h-full justify-center">
+                      <Award className="size-16 text-neutral-800" />
+                      <span>No certificate image uploaded</span>
                     </div>
-                  </SpotlightCard>
+                  )}
                 </motion.div>
-              ))}
-          </motion.div>
 
-          {filteredAchievements.length === 0 && <div className="w-full text-center py-12 text-neutral-500 bg-neutral-900/20 rounded-xl border border-neutral-800 border-dashed">No achievements found matching your criteria.</div>}
-        </section>
+                {/* Right Side: Details Info */}
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.15, duration: 0.4, ease: "easeOut" }}
+                  className="w-full md:w-[35%] p-6 md:p-8 flex flex-col justify-start overflow-y-auto bg-[#18181b] relative border-t md:border-t-0 md:border-l border-neutral-800"
+                >
+                  {/* Close Button */}
+                  <button
+                    onClick={() => setPreviewAchievement(null)}
+                    className="absolute top-4 right-4 z-30 p-1.5 rounded-full bg-neutral-950/60 hover:bg-neutral-900 text-neutral-400 hover:text-white transition-all cursor-pointer"
+                  >
+                    <X className="size-4" />
+                  </button>
+
+                  <div className="space-y-6">
+                    {/* Title and Organizer */}
+                    <div className="pr-6">
+                      <h3 className="text-lg font-bold text-white tracking-tight leading-snug">{previewAchievement.title}</h3>
+                      <p className="text-neutral-400 text-sm mt-1">{previewAchievement.organizer}</p>
+                    </div>
+
+                    <div className="space-y-4 pt-2">
+                      {/* Credential ID */}
+                      {previewAchievement.credentialId && (
+                        <div>
+                          <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block mb-0.5">Credential ID</span>
+                          <span className="text-neutral-300 text-sm font-medium font-mono break-all">{previewAchievement.credentialId}</span>
+                        </div>
+                      )}
+
+                      {/* Type */}
+                      <div>
+                        <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block mb-0.5">Type</span>
+                        <span className="text-neutral-300 text-sm font-medium">{previewAchievement.type}</span>
+                      </div>
+
+                      {/* Category */}
+                      <div>
+                        <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block mb-0.5">Category</span>
+                        <span className="text-neutral-300 text-sm font-medium">{previewAchievement.category}</span>
+                      </div>
+
+                      {/* Issue Date */}
+                      <div>
+                        <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block mb-0.5">Issue Date</span>
+                        <span className="text-neutral-300 text-sm font-medium">{formatMonthYear(previewAchievement.issued_date)}</span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </div>
   );

@@ -162,7 +162,7 @@ export const experiences = [
   },
 ];
 
-export const achievement = [
+export const achievements = [
   {
     id: 2,
     credentialId: "22313141341233",
@@ -185,13 +185,133 @@ export const achievement = [
   },
 ];
 
+export const projects = [
+  {
+    id: 1,
+    title: "LunasinYuk - Financial Tracker",
+    description: "A comprehensive web-based financial management dashboard to track daily expenses, set budget limits, and visualize spending habits.",
+    type: "Personal Project",
+    category: "Full-Stack Web",
+    techstack: ["React", "Tailwind CSS", "Firebase", "Chart.js"],
+    status: true,
+    image: "/images/projects/lunasinyuk.jpg", // Pastikan Anda menyiapkan placeholder gambar ini
+    github: "https://github.com/username/lunasinyuk",
+    demoLink: "https://lunasinyuk.app",
+  },
+  {
+    id: 2,
+    title: "NeoKas - Point of Sale",
+    description: "Modern POS system designed for small to medium retail businesses. Features include inventory management, real-time analytics, and role-based access.",
+    type: "Client Project",
+    category: "Web App",
+    techstack: ["Laravel", "DaisyUI", "MySQL", "Inertia.js"],
+    status: false, // Menandakan masih In Dev
+    image: "/images/projects/neokas.jpg",
+    github: "", // Kosong, mensimulasikan private repository
+    demoLink: "https://neokas-staging.vercel.app",
+  },
+  {
+    id: 3,
+    title: "Kendari Loker Portal",
+    description: "A dedicated job portal platform connecting local talent in Kendari with verified employers. Includes an integrated application tracking system.",
+    type: "Community",
+    category: "Full-Stack Web",
+    techstack: ["Next.js", "Tailwind CSS", "Prisma", "PostgreSQL"],
+    status: true,
+    image: "/images/projects/kendariloker.jpg",
+    github: "https://github.com/username/kendari-loker",
+    demoLink: "https://kendariloker.com",
+  },
+  {
+    id: 4,
+    title: "GardenLink - Bio Link Tool",
+    description: "A highly customizable link-in-bio solution for creators. Users can build their own landing page with drag-and-drop components and themes.",
+    type: "Personal Project",
+    category: "Web App",
+    techstack: ["React", "Styled Components", "Node.js", "MongoDB"],
+    status: true,
+    image: "/images/projects/gardenlink.jpg",
+    github: "https://github.com/username/gardenlink",
+    demoLink: "", // Mensimulasikan project yang belum dideploy secara live
+  },
+  {
+    id: 5,
+    title: "TaskFlow Mobile",
+    description: "A minimalist to-do list and productivity application for Android devices, featuring offline support and daily reminders.",
+    type: "Personal Project",
+    category: "Mobile App",
+    techstack: ["Flutter", "Dart", "Hive", "Provider"],
+    status: false,
+    image: "/images/projects/taskflow.jpg",
+    github: "https://github.com/username/taskflow-mobile",
+    demoLink: "https://play.google.com/store/apps/details?id=com.taskflow",
+  },
+  {
+    id: 6,
+    title: "Kurage Stream Overlays",
+    description: "Custom animated stream overlays, alert boxes, and transition stingers designed specifically for a VTuber/Art streamer setup.",
+    type: "Freelance",
+    category: "UI/UX & Graphics",
+    techstack: ["Figma", "After Effects", "OBS Studio"],
+    status: true,
+    image: "/images/projects/kurage.jpg",
+    github: "",
+    demoLink: "https://behance.net/gallery/kurage-overlays",
+  },
+];
+
 export const gears = [
+  {
+    id: 7,
+    brand: "Vivan",
+    model: "Q15",
+    image: "/images/vivan-q15.jpg",
+    category: "Audio",
+    description: "Balanced audio for listening to music",
+    link: "https://tk.tokopedia.com/ZSQNVqHW1/",
+  },
+  {
+    id: 6,
+    brand: "Rexus",
+    model: "QB 400",
+    image: "/images/rexus-qb400.png",
+    category: "Computer",
+    description: "Bluetooth mouse for WFC.",
+    link: "https://tk.tokopedia.com/ZSQN4CsB4/",
+  },
+  {
+    id: 5,
+    brand: "Canon",
+    model: "EOS RF 50mm f/1.8",
+    image: "/images/canon-eos-rf50mm.jpg",
+    category: "Video",
+    description: "Nifty fifty",
+    link: "https://tk.tokopedia.com/ZSQNQ19nv/",
+  },
+  {
+    id: 4,
+    brand: "Rexus",
+    model: "RXC305",
+    image: "/images/rexus-rxc305.jpg",
+    category: "Computer",
+    description: "just plug it in, it immediately reads SD and microSD without any hassle.",
+    link: "https://tk.tokopedia.com/ZSQNugaP3/",
+  },
+  {
+    id: 3,
+    brand: "Canon",
+    model: "EOS RP",
+    image: "/images/canon-eos-rp.jpg",
+    category: "Video",
+    description: "Really great camera for taking sharp images and it's a budget camera",
+    link: "https://tk.tokopedia.com/ZSQNugaP3/",
+  },
   {
     id: 2,
     brand: "Vortexseries",
     model: "Mono 75",
     image: "/images/vortexseries-mono75.jpg",
-    category: "Video",
+    category: "Computer",
     description: "Budget mechanical keyboard with soothing sound.",
     link: "https://tk.tokopedia.com/ZSQ8TUBYF/",
   },
