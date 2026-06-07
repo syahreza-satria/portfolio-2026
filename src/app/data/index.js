@@ -1,6 +1,7 @@
 import { DiPhotoshop } from "react-icons/di";
 import { FaPython } from "react-icons/fa";
 import {
+  SiCanva,
   SiCss,
   SiDaisyui,
   SiDart,
@@ -8,6 +9,9 @@ import {
   SiFlutter,
   SiGit,
   SiGithub,
+  SiGoogledocs,
+  SiGooglegemini,
+  SiGooglesheets,
   SiHtml5,
   SiJavascript,
   SiLaravel,
@@ -51,6 +55,9 @@ export const skillset = [
   { id: 17, name: "Git", category: "Tools", icon: <SiGit className="size-5 text-orange-500" />, bgClass: "bg-orange-500/30" },
   { id: 18, name: "Github", category: "Tools", icon: <SiGithub className="size-5 text-neutral-200" />, bgClass: "bg-neutral-600/30" },
   { id: 19, name: "NPM", category: "Tools", icon: <SiNpm className="size-5 text-red-500" />, bgClass: "bg-red-500/30" },
+  { id: 24, name: "Gemini", category: "Tools", icon: <SiGooglegemini className="size-5 text-indigo-400" />, bgClass: "bg-indigo-400/20" },
+  { id: 25, name: "Google Docs", category: "Tools", icon: <SiGoogledocs className="size-5 text-blue-500" />, bgClass: "bg-blue-500/20" },
+  { id: 26, name: "Google Sheets", category: "Tools", icon: <SiGooglesheets className="size-5 text-green-500" />, bgClass: "bg-green-500/20" },
 
   // --- Mobile Development ---
   { id: 20, name: "Dart", category: "Mobile Development", icon: <SiDart className="size-5 text-cyan-500" />, bgClass: "bg-cyan-500/30" },
@@ -59,6 +66,7 @@ export const skillset = [
   // --- Design ---
   { id: 22, name: "Figma", category: "Design", icon: <SiFigma className="size-5 text-pink-500" />, bgClass: "bg-pink-500/30" },
   { id: 23, name: "Adobe Photoshop", category: "Design", icon: <DiPhotoshop className="size-5 text-blue-600" />, bgClass: "bg-blue-600/30" },
+  { id: 27, name: "Canva", category: "Design", icon: <SiCanva className="size-5 text-purple-400" />, bgClass: "bg-purple-500/20" },
 ];
 
 export const educations = [

@@ -352,99 +352,96 @@ export default function Achievement() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
                 onClick={() => setPreviewAchievement(null)}
-                className="absolute inset-0 bg-neutral-950/80 backdrop-blur-md"
+                className="absolute inset-0 bg-neutral-950/85 backdrop-blur-md"
               />
-
+ 
               {/* Modal Box */}
               <motion.div
-                initial={{ scale: 0.92, opacity: 0, y: 0 }}
+                initial={{ scale: 0.95, opacity: 0, y: 15 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ y: 80, opacity: 0, scale: 0.98 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 350,
-                  damping: 28,
-                  exit: { type: "tween", ease: "easeIn", duration: 0.2 }
-                }}
-                className="relative bg-[#18181b] border border-neutral-850 rounded-3xl w-full max-w-5xl overflow-hidden shadow-2xl z-10 flex flex-col md:flex-row max-h-[90vh] md:h-[500px]"
+                exit={{ scale: 0.95, opacity: 0, y: 15 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                className="relative bg-neutral-900 border border-neutral-805 rounded-xl w-full max-w-6xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] z-10 flex flex-col md:flex-row max-h-[90vh] md:h-[600px]"
               >
-                {/* Left Side: Image Preview */}
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1, duration: 0.4, ease: "easeOut" }}
-                  className="w-full md:w-[65%] bg-white flex items-center justify-center relative min-h-[300px] md:min-h-0"
+                {/* Close Button (Floating Top Right of Card for easier tap/click) */}
+                <button
+                  onClick={() => setPreviewAchievement(null)}
+                  className="absolute top-4 right-4 z-40 p-2 rounded-full bg-neutral-950/80 border border-neutral-800 hover:bg-neutral-800 text-neutral-400 hover:text-white transition-all duration-200 cursor-pointer shadow-lg active:scale-95"
                 >
+                  <X className="size-4" />
+                </button>
+ 
+                {/* Left Side: Image Preview */}
+                <div className="w-full md:w-[72%] bg-white relative h-[250px] md:h-full border-b md:border-b-0 md:border-r border-neutral-850">
                   {previewAchievement.image ? (
-                    <div className="relative w-full h-full">
-                      <Image
-                        src={previewAchievement.image}
-                        alt={previewAchievement.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-w-5xl) 65vw, 100vw"
-                        priority
-                      />
-                    </div>
+                    <Image
+                      src={previewAchievement.image}
+                      alt={previewAchievement.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-w-4xl) 72vw, 100vw"
+                      priority
+                    />
                   ) : (
-                    <div className="text-center py-12 text-neutral-500 flex flex-col items-center gap-3 w-full bg-neutral-900 h-full justify-center">
+                    <div className="text-center py-12 text-neutral-500 flex flex-col items-center gap-3 w-full h-full justify-center bg-neutral-950">
                       <Award className="size-16 text-neutral-800" />
                       <span>No certificate image uploaded</span>
                     </div>
                   )}
-                </motion.div>
-
+                </div>
+ 
                 {/* Right Side: Details Info */}
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.15, duration: 0.4, ease: "easeOut" }}
-                  className="w-full md:w-[35%] p-6 md:p-8 flex flex-col justify-start overflow-y-auto bg-[#18181b] relative border-t md:border-t-0 md:border-l border-neutral-800"
-                >
-                  {/* Close Button */}
-                  <button
-                    onClick={() => setPreviewAchievement(null)}
-                    className="absolute top-4 right-4 z-30 p-1.5 rounded-full bg-neutral-950/60 hover:bg-neutral-900 text-neutral-400 hover:text-white transition-all cursor-pointer"
-                  >
-                    <X className="size-4" />
-                  </button>
-
+                <div className="w-full md:w-[28%] p-6 md:p-8 flex flex-col justify-between overflow-y-auto bg-neutral-900 relative">
                   <div className="space-y-6">
-                    {/* Title and Organizer */}
-                    <div className="pr-6">
-                      <h3 className="text-lg font-bold text-white tracking-tight leading-snug">{previewAchievement.title}</h3>
-                      <p className="text-neutral-400 text-sm mt-1">{previewAchievement.organizer}</p>
+                    {/* Header: Title and Organizer */}
+                    <div className="space-y-3 pr-4">
+                      <div className="flex flex-wrap gap-1.5 items-center">
+                        <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">
+                          {previewAchievement.type}
+                        </span>
+                        <span className="text-[10px] uppercase font-bold tracking-widest text-neutral-300 bg-neutral-800 border border-neutral-700/80 px-2 py-0.5 rounded-md">
+                          {previewAchievement.category}
+                        </span>
+                      </div>
+ 
+                      <h3 className="text-xl font-bold text-white tracking-tight leading-tight">
+                        {previewAchievement.title}
+                      </h3>
+                      <p className="text-neutral-400 text-sm font-medium flex items-center gap-1.5">
+                        <Award className="size-4 text-neutral-500 shrink-0" />
+                        {previewAchievement.organizer}
+                      </p>
                     </div>
-
-                    <div className="space-y-4 pt-2">
+ 
+                    {/* Metadata Section */}
+                    <div className="space-y-4 pt-2 border-t border-neutral-850">
                       {/* Credential ID */}
                       {previewAchievement.credentialId && (
-                        <div>
-                          <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block mb-0.5">Credential ID</span>
-                          <span className="text-neutral-300 text-sm font-medium font-mono break-all">{previewAchievement.credentialId}</span>
+                        <div className="space-y-1">
+                          <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block">Credential ID</span>
+                          <span className="text-neutral-300 text-sm font-medium font-mono break-all bg-neutral-950 px-2.5 py-1.5 rounded-xl border border-neutral-800/80 flex items-center gap-2">
+                            <ShieldCheck className="size-4 text-emerald-500 shrink-0" />
+                            {previewAchievement.credentialId}
+                          </span>
                         </div>
                       )}
-
-                      {/* Type */}
-                      <div>
-                        <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block mb-0.5">Type</span>
-                        <span className="text-neutral-300 text-sm font-medium">{previewAchievement.type}</span>
-                      </div>
-
-                      {/* Category */}
-                      <div>
-                        <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block mb-0.5">Category</span>
-                        <span className="text-neutral-300 text-sm font-medium">{previewAchievement.category}</span>
-                      </div>
-
+ 
                       {/* Issue Date */}
-                      <div>
-                        <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block mb-0.5">Issue Date</span>
-                        <span className="text-neutral-300 text-sm font-medium">{formatMonthYear(previewAchievement.issued_date)}</span>
+                      <div className="space-y-1">
+                        <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block">Issue Date</span>
+                        <span className="text-neutral-300 text-sm font-medium bg-neutral-950 px-2.5 py-1.5 rounded-xl border border-neutral-800/80 flex items-center gap-2">
+                          <Calendar className="size-4 text-neutral-500 shrink-0" />
+                          {formatMonthYear(previewAchievement.issued_date)}
+                        </span>
                       </div>
                     </div>
                   </div>
-                </motion.div>
+ 
+                  {/* Footer Branding Info */}
+                  <div className="mt-8 pt-4 border-t border-neutral-850 text-center text-neutral-600 text-[10px] uppercase tracking-widest font-bold">
+                    Verified Credential
+                  </div>
+                </div>
               </motion.div>
             </div>
           )}

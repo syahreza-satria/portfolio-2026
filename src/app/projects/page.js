@@ -224,12 +224,12 @@ export default function Projects() {
           </div>
 
           <Tabs defaultValue="All" value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
-            <TabsList className="bg-neutral-800/40 border border-neutral-700/50 p-1 flex flex-wrap h-auto justify-center w-full md:w-fit mx-auto rounded-lg">
+            <TabsList className="bg-neutral-800/40 border border-neutral-700/50 p-1 flex overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] w-full md:w-fit mx-auto rounded-lg gap-1 whitespace-nowrap justify-start md:justify-center">
               {uniqueCategories.map((category) => (
                 <TabsTrigger
                   key={category}
                   value={category}
-                  className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white data-[state=active]:shadow-sm text-neutral-400 rounded-md px-4 py-1.5 text-sm transition-all cursor-pointer"
+                  className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white data-[state=active]:shadow-sm text-neutral-400 rounded-md px-4 py-1.5 text-sm transition-all cursor-pointer shrink-0"
                 >
                   {category === "All" ? "All Categories" : category}
                 </TabsTrigger>
@@ -402,98 +402,90 @@ export default function Projects() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
                 onClick={() => setPreviewProject(null)}
-                className="absolute inset-0 bg-neutral-950/80 backdrop-blur-md"
+                className="absolute inset-0 bg-neutral-950/85 backdrop-blur-md"
               />
-
+ 
               {/* Modal Box */}
               <motion.div
-                initial={{ scale: 0.92, opacity: 0, y: 0 }}
+                initial={{ scale: 0.95, opacity: 0, y: 15 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ y: 80, opacity: 0, scale: 0.98 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 350,
-                  damping: 28,
-                  exit: { type: "tween", ease: "easeIn", duration: 0.2 }
-                }}
-                className="relative bg-[#18181b] border border-neutral-850 rounded-3xl w-full max-w-5xl overflow-hidden shadow-2xl z-10 flex flex-col md:flex-row max-h-[90vh] md:h-[500px]"
+                exit={{ scale: 0.95, opacity: 0, y: 15 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                className="relative bg-neutral-900 border border-neutral-805 rounded-[2rem] w-full max-w-4xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] z-10 flex flex-col md:flex-row max-h-[90vh] md:h-[550px]"
               >
-                {/* Left Side: Image Preview */}
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1, duration: 0.4, ease: "easeOut" }}
-                  className="w-full md:w-[60%] bg-[#1c1c1c] flex items-center justify-center relative min-h-[250px] md:min-h-0"
+                {/* Close Button (Floating Top Right of Card for easier tap/click) */}
+                <button
+                  onClick={() => setPreviewProject(null)}
+                  className="absolute top-4 right-4 z-40 p-2 rounded-full bg-neutral-950/80 border border-neutral-800 hover:bg-neutral-800 text-neutral-400 hover:text-white transition-all duration-200 cursor-pointer shadow-lg active:scale-95"
                 >
+                  <X className="size-4" />
+                </button>
+ 
+                {/* Left Side: Image Preview */}
+                <div className="w-full md:w-[55%] bg-neutral-950 flex items-center justify-center relative h-[250px] md:h-full overflow-hidden group/image">
                   {previewProject.image ? (
                     <div className="relative w-full h-full">
                       <Image
                         src={previewProject.image}
                         alt={previewProject.title}
                         fill
-                        className="object-cover"
-                        sizes="(max-w-5xl) 60vw, 100vw"
+                        className="object-cover transition-transform duration-700 group-hover/image:scale-105"
+                        sizes="(max-w-4xl) 55vw, 100vw"
                         priority
                       />
+                      <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/50 via-transparent to-neutral-950/20 pointer-events-none" />
                     </div>
                   ) : (
-                    <div className="text-center py-12 text-neutral-500 flex flex-col items-center gap-3 w-full bg-neutral-900 h-full justify-center">
+                    <div className="text-center py-12 text-neutral-500 flex flex-col items-center gap-3 w-full h-full justify-center">
                       <ListFilter className="size-16 text-neutral-800" />
                       <span>No project image uploaded</span>
                     </div>
                   )}
-                </motion.div>
-
+                </div>
+ 
                 {/* Right Side: Details Info */}
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.15, duration: 0.4, ease: "easeOut" }}
-                  className="w-full md:w-[40%] p-6 md:p-8 flex flex-col justify-between overflow-y-auto bg-[#18181b] relative border-t md:border-t-0 md:border-l border-neutral-800"
-                >
-                  {/* Close Button */}
-                  <button
-                    onClick={() => setPreviewProject(null)}
-                    className="absolute top-4 right-4 z-30 p-1.5 rounded-full bg-neutral-950/60 hover:bg-neutral-900 text-neutral-400 hover:text-white transition-all cursor-pointer"
-                  >
-                    <X className="size-4" />
-                  </button>
-
+                <div className="w-full md:w-[45%] p-6 md:p-8 flex flex-col justify-between overflow-y-auto bg-neutral-900 relative border-t md:border-t-0 md:border-l border-neutral-800/80">
                   <div className="space-y-6">
-                    {/* Title and Badges */}
-                    <div className="pr-6 space-y-2">
-                      <h3 className="text-xl font-bold text-white tracking-tight leading-snug">{previewProject.title}</h3>
-                      <div className="flex flex-wrap gap-2">
-                        <Badge variant="secondary" className="text-[10px] bg-neutral-800 text-neutral-300 border-neutral-700">
+                    {/* Header: Title and Badges */}
+                    <div className="space-y-3 pr-4">
+                      <div className="flex flex-wrap gap-1.5 items-center">
+                        <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">
                           {previewProject.type}
-                        </Badge>
-                        <Badge variant="secondary" className="text-[10px] bg-neutral-800 text-neutral-300 border-neutral-700">
+                        </span>
+                        <span className="text-[10px] uppercase font-bold tracking-widest text-neutral-300 bg-neutral-800 border border-neutral-700/80 px-2 py-0.5 rounded-md">
                           {previewProject.category}
-                        </Badge>
-                        <span
-                          className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold border ${
-                            previewProject.status ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10" : "border-neutral-500/30 text-neutral-400 bg-neutral-500/10"
-                          }`}
-                        >
-                          <span className={`size-1 rounded-full ${previewProject.status ? "bg-emerald-500 animate-pulse" : "bg-neutral-500"}`}></span>
-                          {previewProject.status ? "Live" : "Not Live"}
+                        </span>
+                      </div>
+ 
+                      <h3 className="text-2xl font-bold text-white tracking-tight leading-tight">
+                        {previewProject.title}
+                      </h3>
+ 
+                      <div className="flex items-center gap-2">
+                        <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
+                          previewProject.status ? "border-emerald-500/20 text-emerald-400 bg-emerald-500/5" : "border-neutral-500/20 text-neutral-400 bg-neutral-800"
+                        }`}>
+                          <span className={`size-1.5 rounded-full ${previewProject.status ? "bg-emerald-500 animate-pulse" : "bg-neutral-500"}`}></span>
+                          {previewProject.status ? "Live Project" : "In Development"}
                         </span>
                       </div>
                     </div>
-
+ 
                     {/* Description */}
-                    <div className="space-y-1">
+                    <div className="space-y-2">
                       <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block">Description</span>
-                      <p className="text-neutral-300 text-sm leading-relaxed max-h-[160px] overflow-y-auto pr-1">{previewProject.description}</p>
+                      <p className="text-neutral-300 text-sm leading-relaxed max-h-[160px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-neutral-800 scrollbar-track-transparent">
+                        {previewProject.description}
+                      </p>
                     </div>
-
+ 
                     {/* Tech Stack */}
                     {previewProject.techstack && previewProject.techstack.length > 0 && (
-                      <div className="space-y-1.5">
+                      <div className="space-y-2">
                         <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block">Tech Stack</span>
                         <div className="flex flex-wrap gap-1.5">
                           {previewProject.techstack.map((tech) => (
-                            <span key={tech} className="text-xs bg-neutral-850 text-neutral-300 border border-neutral-800 px-2.5 py-1 rounded-lg font-mono">
+                            <span key={tech} className="text-xs bg-neutral-950 text-neutral-300 border border-neutral-800/80 px-2.5 py-1 rounded-lg font-mono">
                               {tech}
                             </span>
                           ))}
@@ -501,15 +493,15 @@ export default function Projects() {
                       </div>
                     )}
                   </div>
-
+ 
                   {/* Actions Footer */}
-                  <div className="mt-8 pt-4 border-t border-neutral-800 flex gap-3">
+                  <div className="mt-8 pt-4 border-t border-neutral-850 flex gap-3">
                     {previewProject.github && (
                       <a
                         href={previewProject.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-neutral-800 hover:bg-neutral-755 text-neutral-200 hover:text-white transition-all text-sm font-medium border border-neutral-700/50 cursor-pointer"
+                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-neutral-200 hover:text-white transition-all text-sm font-medium border border-neutral-800 cursor-pointer active:scale-98"
                       >
                         <SiGithub className="size-4" />
                         <span>Source Code</span>
@@ -520,14 +512,14 @@ export default function Projects() {
                         href={previewProject.demoLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-all text-sm font-medium cursor-pointer shadow-lg shadow-emerald-600/10 active:scale-95"
+                        className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-all text-sm font-medium cursor-pointer shadow-lg shadow-emerald-600/10 active:scale-95"
                       >
                         <span>Live Demo</span>
                         <ArrowUpRight className="size-4" />
                       </a>
                     )}
                   </div>
-                </motion.div>
+                </div>
               </motion.div>
             </div>
           )}
