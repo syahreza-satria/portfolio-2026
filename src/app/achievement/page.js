@@ -43,6 +43,47 @@ export default function Achievement() {
   const [editingAchievement, setEditingAchievement] = useState(null);
   const [previewAchievement, setPreviewAchievement] = useState(null);
 
+  // 3D Card Tilt state for Certificate Preview
+  const [rotateX, setRotateX] = useState(0);
+  const [rotateY, setRotateY] = useState(0);
+  const [sheenStyle, setSheenStyle] = useState({});
+  const [previewAspect, setPreviewAspect] = useState(297 / 210);
+
+  useEffect(() => {
+    if (!previewAchievement) {
+      setRotateX(0);
+      setRotateY(0);
+      setSheenStyle({});
+      setPreviewAspect(297 / 210);
+    }
+  }, [previewAchievement]);
+
+  const handleCardMouseMove = (e) => {
+    const card = e.currentTarget;
+    const box = card.getBoundingClientRect();
+    const x = e.clientX - box.left;
+    const y = e.clientY - box.top;
+    
+    const xPercent = (x / box.width) * 100;
+    const yPercent = (y / box.height) * 100;
+    
+    // Tilt angle (-10 to 10 degrees)
+    const rotX = -((y - box.height / 2) / (box.height / 2)) * 10;
+    const rotY = ((x - box.width / 2) / (box.width / 2)) * 10;
+    
+    setRotateX(rotX);
+    setRotateY(rotY);
+    setSheenStyle({
+      background: `radial-gradient(circle at ${xPercent}% ${yPercent}%, rgba(255, 255, 255, 0.15) 0%, transparent 60%)`,
+    });
+  };
+
+  const handleCardMouseLeave = () => {
+    setRotateX(0);
+    setRotateY(0);
+    setSheenStyle({});
+  };
+
   const achievementFields = [
     { name: "title", label: "Title", required: true },
     { name: "organizer", label: "Organizer", required: true },
@@ -361,7 +402,7 @@ export default function Achievement() {
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.95, opacity: 0, y: 15 }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className="relative bg-neutral-900 border border-neutral-805 rounded-xl w-full max-w-5xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] z-10 flex flex-col md:flex-row max-h-[90vh] md:h-[600px]"
+                className="relative bg-neutral-900 border border-neutral-800 rounded-2xl w-full max-w-5xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] z-10 flex flex-col md:flex-row max-h-[90vh] md:h-[600px]"
               >
                 {/* Close Button (Floating Top Right of Card for easier tap/click) */}
                 <button
@@ -371,30 +412,84 @@ export default function Achievement() {
                   <X className="size-4" />
                 </button>
 
-                {/* Left Side: Image Preview */}
-                <div className="w-full md:flex-1 h-[250px] md:h-full bg-white flex items-center justify-center relative border-b md:border-b-0 md:border-r border-neutral-850">
+                {/* Left Side: Image Preview with 3D Tilt */}
+                <div className="w-full md:flex-1 h-[320px] md:h-full bg-neutral-950 flex items-center justify-center relative border-b md:border-b-0 md:border-r border-neutral-800 overflow-hidden group/image-container">
+                  {/* Glowing Radial Background based on achievement type */}
+                  <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.12),transparent_70%)] pointer-events-none" />
+                  
+                  {/* Tech Grid overlay */}
+                  <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.012)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.012)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
+                  
                   {previewAchievement.image ? (
-                    <Image
-                      src={previewAchievement.image}
-                      alt={previewAchievement.title}
-                      fill
-                      className="object-contain p-4 bg-white"
-                      sizes="(max-w-4xl) 70vw, 100vw"
-                      priority
-                    />
+                    <div className="w-full h-full flex items-center justify-center p-4 sm:p-6 [perspective:1000px]">
+                      <motion.div
+                        onMouseMove={handleCardMouseMove}
+                        onMouseLeave={handleCardMouseLeave}
+                        animate={{
+                          rotateX: rotateX,
+                          rotateY: rotateY,
+                        }}
+                        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                        className="relative w-full max-w-[640px] max-h-[90%] rounded-xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.7)] border border-neutral-700/40 bg-neutral-900 cursor-grab active:cursor-grabbing"
+                        style={{ 
+                          transformStyle: "preserve-3d",
+                          aspectRatio: previewAspect
+                        }}
+                      >
+                        {/* Certificate Image */}
+                        <Image
+                          src={previewAchievement.image}
+                          alt={previewAchievement.title}
+                          fill
+                          className="object-contain pointer-events-none select-none"
+                          sizes="(max-w-4xl) 70vw, 100vw"
+                          priority
+                          onLoad={(e) => {
+                            const img = e.target;
+                            if (img.naturalWidth && img.naturalHeight) {
+                              setPreviewAspect(img.naturalWidth / img.naturalHeight);
+                            }
+                          }}
+                        />
+                        
+                        {/* Interactive Sheen Overlay */}
+                        <div 
+                          className="absolute inset-0 pointer-events-none transition-opacity duration-200" 
+                          style={sheenStyle}
+                        />
+
+                        {/* Subtle Card Border Highlight */}
+                        <div className="absolute inset-0 border border-white/5 rounded-xl pointer-events-none" />
+                      </motion.div>
+                    </div>
                   ) : (
-                    <div className="text-center py-12 text-neutral-500 flex flex-col items-center gap-3 w-full h-full justify-center bg-neutral-950">
-                      <Award className="size-16 text-neutral-800" />
-                      <span>No certificate image uploaded</span>
+                    <div className="text-center py-12 text-neutral-500 flex flex-col items-center gap-3 w-full h-full justify-center">
+                      <Award className="size-16 text-neutral-800 animate-pulse" />
+                      <span className="font-medium text-neutral-400">No certificate image uploaded</span>
+                    </div>
+                  )}
+                  
+                  {/* Floating Action Button */}
+                  {previewAchievement.image && (
+                    <div className="absolute bottom-4 left-4 z-20">
+                      <a
+                        href={previewAchievement.image}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-900/80 hover:bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-800 backdrop-blur text-xs font-medium transition-all shadow-lg active:scale-95 cursor-pointer"
+                      >
+                        <ExternalLink className="size-3.5" />
+                        <span>View Full Image</span>
+                      </a>
                     </div>
                   )}
                 </div>
 
                 {/* Right Side: Details Info */}
-                <div className="w-full md:w-[320px] p-6 md:p-8 flex flex-col justify-between overflow-y-auto bg-neutral-900 relative shrink-0">
+                <div className="w-full md:w-[340px] p-6 md:p-8 flex flex-col justify-between overflow-y-auto bg-neutral-900 relative shrink-0">
                   <div className="space-y-6">
                     {/* Header: Title and Organizer */}
-                    <div className="space-y-3 pr-4">
+                    <div className="space-y-3.5">
                       <div className="flex flex-wrap gap-1.5 items-center">
                         <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">
                           {previewAchievement.type}
@@ -404,42 +499,45 @@ export default function Achievement() {
                         </span>
                       </div>
 
-                      <h3 className="text-xl font-bold text-white tracking-tight leading-tight">
+                      <h3 className="text-lg md:text-xl font-bold text-white tracking-tight leading-snug">
                         {previewAchievement.title}
                       </h3>
-                      <p className="text-neutral-400 text-sm font-medium flex items-center gap-1.5">
-                        <Award className="size-4 text-neutral-500 shrink-0" />
+                      <p className="text-neutral-400 text-sm font-medium flex items-center gap-2">
+                        <Award className="size-4.5 text-neutral-500 shrink-0" />
                         {previewAchievement.organizer}
                       </p>
                     </div>
 
                     {/* Metadata Section */}
-                    <div className="space-y-4 pt-2 border-t border-neutral-850">
+                    <div className="space-y-4 pt-4 border-t border-neutral-800">
                       {/* Credential ID */}
                       {previewAchievement.credentialId && (
-                        <div className="space-y-1">
+                        <div className="space-y-1.5">
                           <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block">Credential ID</span>
-                          <span className="text-neutral-300 text-sm font-medium font-mono break-all bg-neutral-950 px-2.5 py-1.5 rounded-xl border border-neutral-800/80 flex items-center gap-2">
-                            <ShieldCheck className="size-4 text-emerald-500 shrink-0" />
-                            {previewAchievement.credentialId}
-                          </span>
+                          <div className="text-neutral-300 text-sm font-medium font-mono break-all bg-neutral-950/50 px-3 py-2 rounded-xl border border-neutral-800/80 flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2 truncate">
+                              <ShieldCheck className="size-4 text-emerald-500 shrink-0" />
+                              <span className="truncate">{previewAchievement.credentialId}</span>
+                            </div>
+                          </div>
                         </div>
                       )}
 
                       {/* Issue Date */}
-                      <div className="space-y-1">
+                      <div className="space-y-1.5">
                         <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block">Issue Date</span>
-                        <span className="text-neutral-300 text-sm font-medium bg-neutral-950 px-2.5 py-1.5 rounded-xl border border-neutral-800/80 flex items-center gap-2">
+                        <div className="text-neutral-300 text-sm font-medium bg-neutral-950/50 px-3 py-2 rounded-xl border border-neutral-800/80 flex items-center gap-2">
                           <Calendar className="size-4 text-neutral-500 shrink-0" />
-                          {formatMonthYear(previewAchievement.issued_date)}
-                        </span>
+                          <span>{formatMonthYear(previewAchievement.issued_date)}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Footer Branding Info */}
-                  <div className="mt-8 pt-4 border-t border-neutral-850 text-center text-neutral-600 text-[10px] uppercase tracking-widest font-bold">
-                    Verified Credential
+                  <div className="mt-8 pt-4 border-t border-neutral-800 text-center text-neutral-600 text-[10px] uppercase tracking-widest font-bold flex items-center justify-center gap-1.5">
+                    <ShieldCheck className="size-3.5 text-emerald-500/50" />
+                    <span>Verified Credential</span>
                   </div>
                 </div>
               </motion.div>
