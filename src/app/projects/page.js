@@ -155,7 +155,7 @@ export default function Projects() {
             <div className="h-4.5 w-48 bg-neutral-800/60 rounded-md" />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 animate-pulse">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-2.5 md:gap-6 animate-pulse">
             {[1, 2, 3, 4].map((n) => (
               <div key={n} className="rounded-3xl border border-neutral-800/80 bg-neutral-900/40 p-0 flex flex-col gap-3 h-[420px]">
                 {/* Image Placeholder */}
@@ -240,7 +240,7 @@ export default function Projects() {
 
         <p className="text-neutral-400 font-medium text-sm">Showing {filteredProjects.length} projects</p>
 
-        <motion.div layout="position" className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <motion.div layout="position" className="grid grid-cols-2 md:grid-cols-2 gap-2.5 md:gap-6">
           <AnimatePresence mode="popLayout">
             {[...filteredProjects].map((project) => (
               <motion.div
@@ -280,51 +280,51 @@ export default function Projects() {
                     {project.image && <Image src={project.image} alt={project.title} fill loading="lazy" className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-w-7xl) 33vw, 100vw" />}
                   </div>
 
-                  <div className="px-5 py-3 flex flex-col grow">
-                    <div className="flex flex-col gap-1.5">
-                      <div className="flex justify-between items-start gap-2">
-                        <h3 className="text-white font-medium text-lg tracking-tight leading-snug line-clamp-1" title={project.title}>
+                  <div className="px-3 py-2.5 sm:px-5 sm:py-3 flex flex-col grow">
+                    <div className="flex flex-col gap-1 sm:gap-1.5">
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1 sm:gap-2">
+                        <h3 className="text-white font-medium text-xs sm:text-base md:text-lg tracking-tight leading-snug line-clamp-1" title={project.title}>
                           {project.title}
                         </h3>
 
                         <div
-                          className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium border whitespace-nowrap ${project.status ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10" : "border-neutral-500/30 text-neutral-400 bg-neutral-500/10"
+                          className={`flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-medium border whitespace-nowrap ${project.status ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10" : "border-neutral-500/30 text-neutral-400 bg-neutral-500/10"
                             }`}
                         >
-                          <span className={`size-1.5 rounded-full ${project.status ? "bg-emerald-500 animate-pulse" : "bg-neutral-500"}`}></span>
+                          <span className={`size-1 sm:size-1.5 rounded-full ${project.status ? "bg-emerald-500 animate-pulse" : "bg-neutral-500"}`}></span>
                           {project.status ? "Live" : "Not Live"}
                         </div>
                       </div>
 
-                      <p className="text-neutral-400 text-sm leading-relaxed line-clamp-2">{project.description}</p>
+                      <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed line-clamp-2">{project.description}</p>
 
-                      {project.techstack && project.techstack.length > 0 && <p className="text-neutral-500 text-xs mt-1 font-mono line-clamp-1 text-ellipsis">{project.techstack.join(" • ")}</p>}
+                      {project.techstack && project.techstack.length > 0 && <p className="text-neutral-500 text-[10px] sm:text-xs mt-1 font-mono line-clamp-1 text-ellipsis">{project.techstack.join(" • ")}</p>}
                     </div>
 
-                    <div className="mt-auto flex flex-col pt-5 pb-2">
-                      <div className="flex w-full flex-wrap justify-start gap-2 mb-4">
-                        <Badge variant="secondary" className="text-xs bg-neutral-800 text-neutral-300 border-neutral-700">
+                    <div className="mt-auto flex flex-col pt-3 sm:pt-5 pb-1 sm:pb-2">
+                      <div className="flex w-full flex-wrap justify-start gap-1 sm:gap-2 mb-3 sm:mb-4">
+                        <Badge variant="secondary" className="text-[9px] sm:text-xs px-1.5 py-0.5 sm:px-2.5 sm:py-0.5 bg-neutral-800 text-neutral-300 border-neutral-700">
                           {project.type}
                         </Badge>
-                        <Badge variant="secondary" className="text-xs bg-neutral-800 text-neutral-300 border-neutral-700">
+                        <Badge variant="secondary" className="text-[9px] sm:text-xs px-1.5 py-0.5 sm:px-2.5 sm:py-0.5 bg-neutral-800 text-neutral-300 border-neutral-700">
                           {project.category}
                         </Badge>
                       </div>
 
                       <div>
-                        <hr className="border-neutral-700/80 mb-3" />
+                        <hr className="border-neutral-700/80 mb-2 sm:mb-3" />
 
-                        <div className="flex items-center justify-between w-full">
+                        <div className="flex items-center justify-between w-full gap-2">
                           {project.github ? (
                             <a
                               href={project.github}
                               target="_blank"
                               rel="noopener noreferrer"
                               onClick={(e) => e.stopPropagation()}
-                              className="flex items-center gap-1.5 text-neutral-400 hover:text-white transition-colors duration-300 group/github"
+                              className="flex items-center gap-1 sm:gap-1.5 text-neutral-400 hover:text-white transition-colors duration-300 group/github"
                             >
-                              <SiGithub className="size-3.5" />
-                              <span className="text-[11px] font-semibold tracking-widest uppercase">Source</span>
+                              <SiGithub className="size-3 sm:size-3.5" />
+                              <span className="text-[9px] sm:text-[11px] font-semibold tracking-wider sm:tracking-widest uppercase">Source</span>
                             </a>
                           ) : (
                             <div />
@@ -336,10 +336,10 @@ export default function Projects() {
                               target="_blank"
                               rel="noopener noreferrer"
                               onClick={(e) => e.stopPropagation()}
-                              className="flex items-center gap-1 text-emerald-500 hover:text-emerald-400 transition-colors duration-300 group/link"
+                              className="flex items-center gap-0.5 sm:gap-1 text-emerald-500 hover:text-emerald-400 transition-colors duration-300 group/link"
                             >
-                              <span className="text-[11px] font-semibold tracking-widest uppercase">Live Demo</span>
-                              <ArrowUpRight className="size-4 transition-transform duration-300 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" />
+                              <span className="text-[9px] sm:text-[11px] font-semibold tracking-wider sm:tracking-widest uppercase">Live Demo</span>
+                              <ArrowUpRight className="size-3 sm:size-4 transition-transform duration-300 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" />
                             </a>
                           )}
                         </div>
@@ -358,10 +358,10 @@ export default function Projects() {
   };
 
   return (
-    <div className="max-w-7xl w-full mx-auto grid grid-cols-1 sm:grid-cols-12 gap-6 sm:gap-8 px-4 sm:px-6">
+    <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 px-4 lg:px-6">
       <SideNav />
 
-      <motion.div animate={{ y: 0, opacity: 1 }} initial={{ y: 20, opacity: 0 }} transition={{ type: "spring", stiffness: 100, damping: 20 }} className="col-span-1 sm:col-span-9 w-full space-y-6 pb-16">
+      <motion.div animate={{ y: 0, opacity: 1 }} initial={{ y: 20, opacity: 0 }} transition={{ type: "spring", stiffness: 100, damping: 20 }} className="col-span-1 lg:col-span-9 w-full space-y-6 pb-16">
         <section className="flex justify-between items-center gap-4 w-full">
           <div className="flex flex-col gap-2">
             <h1 className="text-2xl font-medium tracking-tighter">Projects</h1>

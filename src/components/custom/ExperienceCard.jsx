@@ -46,24 +46,31 @@ const ExperienceCard = ({ data, onEdit, onDelete }) => {
           )}
         </div>
       )}
-      <Image src={data.logo} width={70} height={70} alt={`${data.company} Logo`} className="rounded-2xl" loading="eager" />
+      <Image
+        src={data.logo}
+        width={70}
+        height={70}
+        alt={`${data.company} Logo`}
+        className="rounded-2xl shrink-0 w-14 h-14 sm:w-[70px] sm:h-[70px] object-contain bg-neutral-900/40 p-1"
+        loading="eager"
+      />
 
-      <div className="flex flex-col gap-2 w-full">
+      <div className="flex flex-col gap-1.5 sm:gap-2 w-full overflow-hidden">
         <div className="flex flex-col gap-0">
-          <h3 className="font-medium text-lg">{data.role}</h3>
-          <p className="text-neutral-400 text-sm flex gap-2">
-            {data.company} <span className="text-neutral-600">•</span>
+          <h3 className="font-medium text-base sm:text-lg">{data.role}</h3>
+          <p className="text-neutral-400 text-xs sm:text-sm flex flex-wrap items-center gap-x-2 gap-y-0.5">
+            {data.company} <span className="text-neutral-600 text-[10px]">•</span>
             {data.location}
           </p>
         </div>
 
-        <p className="text-neutral-400 text-sm flex gap-2 flex-wrap">
+        <p className="text-neutral-400 text-xs sm:text-sm flex flex-wrap items-center gap-x-2 gap-y-0.5">
           {formatMonthYear(data.start_date)} - {formatMonthYear(data.end_date)}
-          <span className="text-neutral-600">•</span>
+          <span className="text-neutral-600 text-[10px]">•</span>
           {data.duration}
-          <span className="text-neutral-600">•</span>
+          <span className="text-neutral-600 text-[10px]">•</span>
           {data.type}
-          <span className="text-neutral-600">•</span>
+          <span className="text-neutral-600 text-[10px]">•</span>
           {data.setup}
         </p>
 

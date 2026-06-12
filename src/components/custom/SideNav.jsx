@@ -27,9 +27,9 @@ const SideNav = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="col-span-1 sm:col-span-3 w-full">
+    <div className="col-span-1 lg:col-span-3 w-full">
       {/* --- MOBILE & TABLET HEADER --- */}
-      <div className="flex sm:hidden items-center justify-between w-full p-4 bg-neutral-900/40 border border-neutral-800/80 rounded-2xl mb-2 gap-4">
+      <div className="flex lg:hidden items-center justify-between w-full p-4 bg-neutral-900/40 border border-neutral-800/80 rounded-2xl mb-2 gap-4">
         <div className="flex items-center gap-3">
           <Image
             src="/images/brand-logo.png"
@@ -99,7 +99,7 @@ const SideNav = () => {
       </div>
 
       {/* --- MOBILE FLOATING BOTTOM DOCK --- */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex sm:hidden bg-neutral-950/85 backdrop-blur-xl border border-neutral-800/90 rounded-full px-3 py-2 shadow-2xl items-center gap-1 max-w-[95vw] w-fit">
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex lg:hidden bg-neutral-950/85 backdrop-blur-xl border border-neutral-800/90 rounded-full px-3 py-2 shadow-2xl items-center gap-1 max-w-[95vw] w-fit">
         {navItems.map((item, index) => {
           const isActive = pathname === item.path;
 
@@ -122,7 +122,7 @@ const SideNav = () => {
       </div>
 
       {/* --- DESKTOP SIDEBAR --- */}
-      <div className="hidden sm:flex flex-col gap-6 items-center w-full sticky top-8 h-fit">
+      <div className="hidden lg:flex flex-col gap-6 items-center w-full sticky top-8 h-fit">
         <div className="flex flex-col items-center gap-3 w-full">
           <Image src={"/images/brand-logo.png"} width={96} height={96} alt="Logo" className="rounded-full border-[3px] border-emerald-700/80 p-0.5 object-cover" loading="eager" />
           <h1 className="font-bold flex items-center gap-1.5 text-[15px] text-white tracking-tight">

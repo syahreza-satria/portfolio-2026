@@ -168,7 +168,7 @@ export default function Achievement() {
             <div className="h-4.5 w-48 bg-neutral-800/60 rounded-md" />
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 animate-pulse">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2.5 md:gap-4 animate-pulse">
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <div key={n} className="rounded-3xl border border-neutral-800/80 bg-neutral-900/40 p-0 flex flex-col gap-3 h-[350px]">
                 {/* Image Placeholder */}
@@ -242,7 +242,7 @@ export default function Achievement() {
         <p className="text-neutral-400 font-medium text-sm">Showing {filteredAchievements.length} achievements</p>
 
         {/* List Section */}
-        <motion.div variants={parent} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <motion.div variants={parent} initial="hidden" animate="show" className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2.5 md:gap-4">
           {[...filteredAchievements].map((achieve) => (
             <motion.div variants={child} key={achieve.id} className="h-full">
               {/* Diperbaiki p-0! menjadi !p-0 */}
@@ -273,26 +273,26 @@ export default function Achievement() {
                   {achieve.image && <Image src={achieve.image} alt={achieve.title} fill loading="eager" className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-w-7xl) 33vw, 100vw" priority={false} />}
                 </div>
 
-                <div className="px-4 py-2 flex flex-col grow">
-                  <div className="flex flex-col gap-1.5">
-                    <span className="text-sm font-mono text-neutral-500 tracking-wider">{achieve.credentialId}</span>
-                    <h3 className="text-white font-medium tracking-tight leading-snug line-clamp-2">{achieve.title}</h3>
-                    <p className="text-neutral-400 text-sm">{achieve.organizer}</p>
+                <div className="px-2.5 py-2 sm:px-4 sm:py-3 flex flex-col grow">
+                  <div className="flex flex-col gap-1 sm:gap-1.5">
+                    <span className="text-[10px] sm:text-xs font-mono text-neutral-500 tracking-wider truncate" title={achieve.credentialId}>{achieve.credentialId}</span>
+                    <h3 className="text-white font-medium text-xs sm:text-sm md:text-base tracking-tight leading-snug line-clamp-2" title={achieve.title}>{achieve.title}</h3>
+                    <p className="text-neutral-400 text-xs sm:text-sm truncate">{achieve.organizer}</p>
                   </div>
 
-                  <div className="mt-auto flex flex-col pt-4 pb-2">
-                    <div className="flex w-full flex-wrap justify-start gap-2 mb-4">
-                      <Badge variant="secondary" className="text-xs bg-neutral-800 text-neutral-300 border-neutral-700">
+                  <div className="mt-auto flex flex-col pt-3 sm:pt-4 pb-1 sm:pb-2">
+                    <div className="flex w-full flex-wrap justify-start gap-1 sm:gap-2 mb-3 sm:mb-4">
+                      <Badge variant="secondary" className="text-[9px] sm:text-xs px-1.5 py-0.5 sm:px-2.5 sm:py-0.5 bg-neutral-800 text-neutral-300 border-neutral-700">
                         {achieve.type}
                       </Badge>
-                      <Badge variant="secondary" className="text-xs bg-neutral-800 text-neutral-300 border-neutral-700">
+                      <Badge variant="secondary" className="text-[9px] sm:text-xs px-1.5 py-0.5 sm:px-2.5 sm:py-0.5 bg-neutral-800 text-neutral-300 border-neutral-700">
                         {achieve.category}
                       </Badge>
                     </div>
 
                     <div>
-                      <hr className="border-neutral-700/80 mb-3" />
-                      <span className="text-neutral-500 text-[11px] font-semibold tracking-widest uppercase">ISSUED ON {formatMonthYear(achieve.issued_date)}</span>
+                      <hr className="border-neutral-700/80 mb-2 sm:mb-3" />
+                      <span className="text-neutral-500 text-[9px] sm:text-[11px] font-semibold tracking-wider sm:tracking-widest uppercase">ISSUED ON {formatMonthYear(achieve.issued_date)}</span>
                     </div>
                   </div>
                 </div>
@@ -308,10 +308,10 @@ export default function Achievement() {
   };
 
   return (
-    <div className="max-w-7xl w-full mx-auto grid grid-cols-1 sm:grid-cols-12 gap-6 sm:gap-8 px-4 sm:px-6">
+    <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 px-4 lg:px-6">
       <SideNav />
 
-      <motion.div animate={{ y: 0, opacity: 1 }} initial={{ y: 20, opacity: 0 }} transition={{ type: "spring", stiffness: 100, damping: 20 }} className="col-span-1 sm:col-span-9 w-full space-y-6 pb-16">
+      <motion.div animate={{ y: 0, opacity: 1 }} initial={{ y: 20, opacity: 0 }} transition={{ type: "spring", stiffness: 100, damping: 20 }} className="col-span-1 lg:col-span-9 w-full space-y-6 pb-16">
         <section className="flex justify-between items-center gap-4 w-full">
           <div className="flex flex-col gap-2">
             <h1 className="text-2xl font-medium tracking-tighter">Achievement</h1>
