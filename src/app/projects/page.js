@@ -155,7 +155,7 @@ export default function Projects() {
             <div className="h-4.5 w-48 bg-neutral-800/60 rounded-md" />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 animate-pulse">
+          <div className="grid grid-cols-2 gap-6 animate-pulse">
             {[1, 2, 3, 4].map((n) => (
               <div key={n} className="rounded-3xl border border-neutral-800/80 bg-neutral-900/40 p-0 flex flex-col gap-3 h-[420px]">
                 {/* Image Placeholder */}
@@ -404,7 +404,7 @@ export default function Projects() {
                 onClick={() => setPreviewProject(null)}
                 className="absolute inset-0 bg-neutral-950/85 backdrop-blur-md"
               />
- 
+
               {/* Modal Box */}
               <motion.div
                 initial={{ scale: 0.95, opacity: 0, y: 15 }}
@@ -420,7 +420,7 @@ export default function Projects() {
                 >
                   <X className="size-4" />
                 </button>
- 
+
                 {/* Left Side: Image Preview */}
                 <div className="w-full md:w-[55%] bg-neutral-950 flex items-center justify-center relative h-[250px] md:h-full overflow-hidden group/image">
                   {previewProject.image ? (
@@ -442,7 +442,7 @@ export default function Projects() {
                     </div>
                   )}
                 </div>
- 
+
                 {/* Right Side: Details Info */}
                 <div className="w-full md:w-[45%] p-6 md:p-8 flex flex-col justify-between overflow-y-auto bg-neutral-900 relative border-t md:border-t-0 md:border-l border-neutral-800/80">
                   <div className="space-y-6">
@@ -456,21 +456,20 @@ export default function Projects() {
                           {previewProject.category}
                         </span>
                       </div>
- 
+
                       <h3 className="text-2xl font-bold text-white tracking-tight leading-tight">
                         {previewProject.title}
                       </h3>
- 
+
                       <div className="flex items-center gap-2">
-                        <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
-                          previewProject.status ? "border-emerald-500/20 text-emerald-400 bg-emerald-500/5" : "border-neutral-500/20 text-neutral-400 bg-neutral-800"
-                        }`}>
+                        <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${previewProject.status ? "border-emerald-500/20 text-emerald-400 bg-emerald-500/5" : "border-neutral-500/20 text-neutral-400 bg-neutral-800"
+                          }`}>
                           <span className={`size-1.5 rounded-full ${previewProject.status ? "bg-emerald-500 animate-pulse" : "bg-neutral-500"}`}></span>
                           {previewProject.status ? "Live Project" : "In Development"}
                         </span>
                       </div>
                     </div>
- 
+
                     {/* Description */}
                     <div className="space-y-2">
                       <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block">Description</span>
@@ -478,7 +477,7 @@ export default function Projects() {
                         {previewProject.description}
                       </p>
                     </div>
- 
+
                     {/* Tech Stack */}
                     {previewProject.techstack && previewProject.techstack.length > 0 && (
                       <div className="space-y-2">
@@ -493,7 +492,7 @@ export default function Projects() {
                       </div>
                     )}
                   </div>
- 
+
                   {/* Actions Footer */}
                   <div className="mt-8 pt-4 border-t border-neutral-850 flex gap-3">
                     {previewProject.github && (

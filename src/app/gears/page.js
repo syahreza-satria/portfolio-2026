@@ -150,7 +150,7 @@ export default function Gear() {
             <div className="h-4.5 w-48 bg-neutral-800/60 rounded-md" />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <div key={n} className="rounded-3xl border border-neutral-800/80 bg-neutral-900/40 p-0 flex flex-col gap-3 h-[380px]">
                 {/* Image Placeholder */}

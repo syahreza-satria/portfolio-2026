@@ -168,7 +168,7 @@ export default function Achievement() {
             <div className="h-4.5 w-48 bg-neutral-800/60 rounded-md" />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-pulse">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 animate-pulse">
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <div key={n} className="rounded-3xl border border-neutral-800/80 bg-neutral-900/40 p-0 flex flex-col gap-3 h-[350px]">
                 {/* Image Placeholder */}
@@ -354,7 +354,7 @@ export default function Achievement() {
                 onClick={() => setPreviewAchievement(null)}
                 className="absolute inset-0 bg-neutral-950/85 backdrop-blur-md"
               />
- 
+
               {/* Modal Box */}
               <motion.div
                 initial={{ scale: 0.95, opacity: 0, y: 15 }}
@@ -370,7 +370,7 @@ export default function Achievement() {
                 >
                   <X className="size-4" />
                 </button>
- 
+
                 {/* Left Side: Image Preview */}
                 <div className="w-full md:w-[72%] bg-white relative h-[250px] md:h-full border-b md:border-b-0 md:border-r border-neutral-850">
                   {previewAchievement.image ? (
@@ -389,7 +389,7 @@ export default function Achievement() {
                     </div>
                   )}
                 </div>
- 
+
                 {/* Right Side: Details Info */}
                 <div className="w-full md:w-[28%] p-6 md:p-8 flex flex-col justify-between overflow-y-auto bg-neutral-900 relative">
                   <div className="space-y-6">
@@ -403,7 +403,7 @@ export default function Achievement() {
                           {previewAchievement.category}
                         </span>
                       </div>
- 
+
                       <h3 className="text-xl font-bold text-white tracking-tight leading-tight">
                         {previewAchievement.title}
                       </h3>
@@ -412,7 +412,7 @@ export default function Achievement() {
                         {previewAchievement.organizer}
                       </p>
                     </div>
- 
+
                     {/* Metadata Section */}
                     <div className="space-y-4 pt-2 border-t border-neutral-850">
                       {/* Credential ID */}
@@ -425,7 +425,7 @@ export default function Achievement() {
                           </span>
                         </div>
                       )}
- 
+
                       {/* Issue Date */}
                       <div className="space-y-1">
                         <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block">Issue Date</span>
@@ -436,7 +436,7 @@ export default function Achievement() {
                       </div>
                     </div>
                   </div>
- 
+
                   {/* Footer Branding Info */}
                   <div className="mt-8 pt-4 border-t border-neutral-850 text-center text-neutral-600 text-[10px] uppercase tracking-widest font-bold">
                     Verified Credential
