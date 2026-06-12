@@ -312,7 +312,7 @@ export default function Achievement() {
       <SideNav />
 
       <motion.div animate={{ y: 0, opacity: 1 }} initial={{ y: 20, opacity: 0 }} transition={{ type: "spring", stiffness: 100, damping: 20 }} className="col-span-1 lg:col-span-9 w-full space-y-6 pb-16">
-        <section className="flex justify-between items-center gap-4 w-full">
+        <section className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 w-full">
           <div className="flex flex-col gap-2">
             <h1 className="text-2xl font-medium tracking-tighter">Achievement</h1>
             <p className="text-neutral-400 text-base md:text-lg leading-relaxed">A curated showcase of certifications and milestones reflecting my ongoing commitment to professional growth and technical excellence.</p>

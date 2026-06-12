@@ -288,7 +288,7 @@ export default function About() {
 
         {/* --- Bagian CAREER (Dinamis) --- */}
         <section className="flex flex-col space-y-6">
-          <div className="flex justify-between items-center w-full">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 w-full">
             <div className="space-y-2">
               <h2 className="text-2xl font-medium flex items-center gap-2 text-neutral-300">
                 <PiBriefcase className="size-5" />
@@ -314,7 +314,7 @@ export default function About() {
 
         {/* --- Bagian EDUCATION (Dinamis) --- */}
         <section className="flex flex-col space-y-6">
-          <div className="flex justify-between items-center w-full">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 w-full">
             <div className="space-y-2">
               <h2 className="text-2xl font-medium flex items-center gap-2 text-neutral-300">
                 <PiBriefcase className="size-5" />

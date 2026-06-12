@@ -262,7 +262,7 @@ export default function Gear() {
       <SideNav />
 
       <motion.div animate={{ y: 0, opacity: 1 }} initial={{ y: 20, opacity: 0 }} transition={{ type: "spring", stiffness: 100, damping: 20 }} className="col-span-1 lg:col-span-9 w-full space-y-6 pb-16">
-        <section className="flex justify-between items-center gap-4 w-full">
+        <section className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 w-full">
           <div className="flex flex-col gap-2">
             <h1 className="text-2xl font-medium tracking-tighter">Gear</h1>
             <p className="text-neutral-400 text-base md:text-lg leading-relaxed">A detailed look at the hardware tools that power my daily workflow, from full-stack development to UI/UX design and content creation.</p>
