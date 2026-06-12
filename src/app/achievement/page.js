@@ -361,7 +361,7 @@ export default function Achievement() {
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.95, opacity: 0, y: 15 }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className="relative bg-neutral-900 border border-neutral-805 rounded-xl w-full max-w-6xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] z-10 flex flex-col md:flex-row max-h-[90vh] md:h-[600px]"
+                className="relative bg-neutral-900 border border-neutral-805 rounded-xl w-full md:w-fit max-w-6xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] z-10 flex flex-col md:flex-row max-h-[90vh] md:h-[600px]"
               >
                 {/* Close Button (Floating Top Right of Card for easier tap/click) */}
                 <button
@@ -372,18 +372,15 @@ export default function Achievement() {
                 </button>
 
                 {/* Left Side: Image Preview */}
-                <div className="w-full md:w-[72%] bg-white relative h-[250px] md:h-full border-b md:border-b-0 md:border-r border-neutral-850">
+                <div className="w-full md:w-auto h-[250px] md:h-full bg-white flex items-center justify-center relative border-b md:border-b-0 md:border-r border-neutral-850 shrink-0">
                   {previewAchievement.image ? (
-                    <Image
+                    <img
                       src={previewAchievement.image}
                       alt={previewAchievement.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-w-4xl) 72vw, 100vw"
-                      priority
+                      className="h-full w-auto max-h-[250px] md:max-h-[600px] object-contain bg-white"
                     />
                   ) : (
-                    <div className="text-center py-12 text-neutral-500 flex flex-col items-center gap-3 w-full h-full justify-center bg-neutral-950">
+                    <div className="text-center py-12 text-neutral-500 flex flex-col items-center gap-3 w-80 h-full justify-center bg-neutral-950">
                       <Award className="size-16 text-neutral-800" />
                       <span>No certificate image uploaded</span>
                     </div>
@@ -391,7 +388,7 @@ export default function Achievement() {
                 </div>
 
                 {/* Right Side: Details Info */}
-                <div className="w-full md:w-[28%] p-6 md:p-8 flex flex-col justify-between overflow-y-auto bg-neutral-900 relative">
+                <div className="w-full md:w-[320px] p-6 md:p-8 flex flex-col justify-between overflow-y-auto bg-neutral-900 relative shrink-0">
                   <div className="space-y-6">
                     {/* Header: Title and Organizer */}
                     <div className="space-y-3 pr-4">
