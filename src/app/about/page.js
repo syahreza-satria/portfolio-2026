@@ -38,7 +38,7 @@ export default function About() {
       years--;
       months += 12;
     }
-    
+
     if (months === 12) {
       years++;
       months = 0;
@@ -66,7 +66,7 @@ export default function About() {
   const educationFields = [
     { name: "school", label: "School / University", required: true },
     { name: "degree", label: "Degree", required: true },
-    { name: "field_of_study", label: "Field of Study", required: true },
+    { name: "major", label: "Major", required: true },
     { name: "logo", label: "School Logo", type: "image", required: false },
     { name: "startDate", label: "Start Date", type: "date", required: true },
     { name: "endDate", label: "End Date", type: "date", required: false },
@@ -107,7 +107,7 @@ export default function About() {
 
   const handleSave = async (formData) => {
     const table = modalType === "experience" ? "experiences" : "educations";
-    
+
     // Map camelCase to snake_case for DB
     const payload = modalType === "experience" ? {
       role: formData.role,
@@ -123,7 +123,7 @@ export default function About() {
     } : {
       school: formData.school,
       degree: formData.degree,
-      field_of_study: formData.field_of_study,
+      major: formData.major,
       logo: formData.logo,
       start_date: formData.startDate,
       end_date: formData.endDate,

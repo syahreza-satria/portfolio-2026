@@ -48,8 +48,8 @@ const EducationCard = ({ data, onEdit, onDelete }) => {
         <div className="flex flex-col gap-0">
           <h3 className="font-medium text-lg">{data.school}</h3>
           <p className="text-neutral-400 text-sm flex gap-2">
-            {data.title && <>{data.title}</>}
-            {data.major && (
+            {(data.degree || data.title) && <>{data.degree || data.title}</>}
+            {(data.major) && (
               <>
                 <span className="text-neutral-600">•</span>
                 {data.major}
