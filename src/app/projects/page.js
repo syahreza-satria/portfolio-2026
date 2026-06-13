@@ -8,7 +8,7 @@ import SideNav from "../../components/custom/SideNav";
 import SpotlightCard from "@/components/SpotlightCard";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
-import { ArrowUpRight, Plus, Edit, Trash2, ListFilter, Calendar } from "lucide-react";
+import { ArrowUpRight, Plus, Edit, Trash2, ListFilter, Calendar, ArrowUpDown } from "lucide-react";
 import { SiGithub } from "react-icons/si";
 import { child, parent } from "../../../animation";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -90,10 +90,10 @@ export default function Projects() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // State yang sebelumnya hilang untuk Filter & Pencarian
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [sortOrder, setSortOrder] = useState("desc");
 
   const { user, isAdmin } = useAuth();
 
@@ -151,6 +151,12 @@ export default function Projects() {
     return matchesSearch && matchesType && matchesCategory;
   });
 
+  const sortedProjects = [...filteredProjects].sort((a, b) => {
+    const dateA = a.project_date ? new Date(a.project_date) : new Date(0);
+    const dateB = b.project_date ? new Date(b.project_date) : new Date(0);
+    return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
+  });
+
   // --- 4. Tampilan Loading & Error (Tetap menjaga layout utama) ---
   // Memindahkan early return ke bagian dalam render agar SideNav tidak hilang saat loading
   const renderContent = () => {
@@ -163,7 +169,7 @@ export default function Projects() {
             <div className="h-4.5 w-48 bg-neutral-800/60 rounded-md" />
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-2 gap-2.5 md:gap-6 animate-pulse">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 animate-pulse">
             {[1, 2, 3, 4].map((n) => (
               <div key={n} className="rounded-3xl border border-neutral-800/80 bg-neutral-900/40 p-0 flex flex-col gap-3 h-[420px]">
                 {/* Image Placeholder */}
@@ -214,21 +220,40 @@ export default function Projects() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
 
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center justify-center sm:justify-start gap-2 bg-neutral-800 border border-neutral-700 px-4 py-2 rounded-md text-sm text-neutral-200 hover:bg-neutral-700 transition-colors outline-none focus:ring-2 focus:ring-emerald-500/50">
-                <ListFilter className="size-4" />
-                {selectedType === "All" ? "Filter Type" : `Type: ${selectedType}`}
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-neutral-800 border-neutral-700 text-neutral-200 min-w-[200px]">
-                <DropdownMenuLabel className="text-neutral-400">Project Type</DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-neutral-700" />
-                {uniqueTypes.map((type) => (
-                  <DropdownMenuCheckboxItem key={type} checked={selectedType === type} onCheckedChange={() => setSelectedType(type)} className="focus:bg-neutral-700 focus:text-white cursor-pointer">
-                    {type === "All" ? "All Types" : type}
+            <div className="flex gap-2 w-full sm:w-auto">
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex-1 sm:flex-initial flex items-center justify-center sm:justify-start gap-2 bg-neutral-800 border border-neutral-700 px-4 py-2 rounded-md text-sm text-neutral-200 hover:bg-neutral-700 transition-colors outline-none focus:ring-2 focus:ring-emerald-500/50">
+                  <ListFilter className="size-4" />
+                  {selectedType === "All" ? "Filter Type" : `Type: ${selectedType}`}
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-neutral-800 border-neutral-700 text-neutral-200 min-w-[200px]">
+                  <DropdownMenuLabel className="text-neutral-400">Project Type</DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-neutral-700" />
+                  {uniqueTypes.map((type) => (
+                    <DropdownMenuCheckboxItem key={type} checked={selectedType === type} onCheckedChange={() => setSelectedType(type)} className="focus:bg-neutral-700 focus:text-white cursor-pointer">
+                      {type === "All" ? "All Types" : type}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex-1 sm:flex-initial flex items-center justify-center sm:justify-start gap-2 bg-neutral-800 border border-neutral-700 px-4 py-2 rounded-md text-sm text-neutral-200 hover:bg-neutral-700 transition-colors outline-none focus:ring-2 focus:ring-emerald-500/50">
+                  <ArrowUpDown className="size-4" />
+                  {sortOrder === "desc" ? "Newest First" : "Oldest First"}
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-neutral-800 border-neutral-700 text-neutral-200 min-w-[180px]">
+                  <DropdownMenuLabel className="text-neutral-400">Sort by Date</DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-neutral-700" />
+                  <DropdownMenuCheckboxItem checked={sortOrder === "desc"} onCheckedChange={() => setSortOrder("desc")} className="focus:bg-neutral-700 focus:text-white cursor-pointer">
+                    Newest First
                   </DropdownMenuCheckboxItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  <DropdownMenuCheckboxItem checked={sortOrder === "asc"} onCheckedChange={() => setSortOrder("asc")} className="focus:bg-neutral-700 focus:text-white cursor-pointer">
+                    Oldest First
+                  </DropdownMenuCheckboxItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
 
           <Tabs defaultValue="All" value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
@@ -246,11 +271,11 @@ export default function Projects() {
           </Tabs>
         </div>
 
-        <p className="text-neutral-400 font-medium text-sm">Showing {filteredProjects.length} projects</p>
+        <p className="text-neutral-400 font-medium text-sm">Showing {sortedProjects.length} projects</p>
 
-        <motion.div layout="position" className="grid grid-cols-2 md:grid-cols-2 gap-2.5 md:gap-6">
+        <motion.div layout="position" className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
           <AnimatePresence mode="popLayout">
-            {[...filteredProjects].map((project, index) => (
+            {sortedProjects.map((project, index) => (
               <motion.div
                 layout
                 variants={child}
@@ -412,7 +437,7 @@ export default function Projects() {
           </AnimatePresence>
         </motion.div>
 
-        {filteredProjects.length === 0 && <div className="w-full text-center py-12 text-neutral-500 bg-neutral-900/20 rounded-xl border border-neutral-800 border-dashed">No projects found matching your criteria.</div>}
+        {sortedProjects.length === 0 && <div className="w-full text-center py-12 text-neutral-500 bg-neutral-900/20 rounded-xl border border-neutral-800 border-dashed">No projects found matching your criteria.</div>}
       </>
     );
   };
