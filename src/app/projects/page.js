@@ -1,22 +1,90 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { Input } from "@/components/ui/input";
 import SideNav from "../../components/custom/SideNav";
 import SpotlightCard from "@/components/SpotlightCard";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
-import { ArrowUpRight, Plus, Edit, Trash2, ListFilter, X } from "lucide-react";
+import { ArrowUpRight, Plus, Edit, Trash2, ListFilter, Calendar } from "lucide-react";
 import { SiGithub } from "react-icons/si";
 import { child, parent } from "../../../animation";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { motion, AnimatePresence } from "motion/react";
 import { useAuth } from "@/lib/auth";
-import CrudModal from "@/components/custom/CrudModal";
+
+const getStatusConfig = (status) => {
+  const s = String(status || "").toLowerCase();
+  
+  if (s === "live" || s === "true") {
+    return {
+      text: "Live",
+      dotClass: "bg-emerald-500 animate-pulse",
+      badgeClass: "border-emerald-500/25 text-emerald-400 bg-emerald-500/10"
+    };
+  }
+  
+  if (s === "in progress" || s === "false" || s === "") {
+    return {
+      text: "In Progress",
+      dotClass: "bg-sky-500 animate-pulse",
+      badgeClass: "border-sky-500/25 text-sky-400 bg-sky-500/10"
+    };
+  }
+  
+  if (s === "completed") {
+    return {
+      text: "Completed",
+      dotClass: "bg-indigo-400",
+      badgeClass: "border-indigo-500/25 text-indigo-400 bg-indigo-500/10"
+    };
+  }
+  
+  if (s === "design phase") {
+    return {
+      text: "Design Phase",
+      dotClass: "bg-rose-400",
+      badgeClass: "border-rose-500/25 text-rose-400 bg-rose-500/10"
+    };
+  }
+  
+  if (s === "concept") {
+    return {
+      text: "Concept",
+      dotClass: "bg-amber-400",
+      badgeClass: "border-amber-500/25 text-amber-400 bg-amber-500/10"
+    };
+  }
+  
+  if (s === "maintenance") {
+    return {
+      text: "Maintenance",
+      dotClass: "bg-yellow-500 animate-pulse",
+      badgeClass: "border-yellow-500/25 text-yellow-400 bg-yellow-500/10"
+    };
+  }
+  
+  if (s === "archived") {
+    return {
+      text: "Archived",
+      dotClass: "bg-neutral-500",
+      badgeClass: "border-neutral-700 text-neutral-400 bg-neutral-900/60"
+    };
+  }
+  
+  return {
+    text: status,
+    dotClass: "bg-neutral-500",
+    badgeClass: "border-neutral-700 text-neutral-400 bg-neutral-900/60"
+  };
+};
 
 export default function Projects() {
+  const router = useRouter();
+
   // --- 1. State Management ---
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,33 +96,6 @@ export default function Projects() {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   const { user, isAdmin } = useAuth();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingProject, setEditingProject] = useState(null);
-  const [previewProject, setPreviewProject] = useState(null);
-
-  const projectFields = [
-    { name: "title", label: "Project Title", required: true },
-    { name: "description", label: "Description", type: "textarea", required: true },
-    { name: "image", label: "Project Image", type: "image", required: false },
-    { name: "type", label: "Project Type", type: "select", options: ["Web App", "Mobile App", "Design", "Library", "Other"], required: true },
-    { name: "category", label: "Category", type: "select", options: ["Full-Stack Web", "UI/UX Design", "Mobile Development", "Frontend", "Backend", "AI / ML"], required: true },
-    { name: "techstack", label: "Tech Stack (comma-separated)", type: "array", required: false },
-    { name: "demoLink", label: "Live Demo URL", required: false },
-    { name: "github", label: "GitHub URL", required: false },
-    { name: "status", label: "Status (Live)", type: "switch", description: "Is this project live?", required: false },
-  ];
-
-  const handleOpenAdd = () => {
-    setEditingProject(null);
-    setIsModalOpen(true);
-  };
-
-  const handleOpenEdit = (e, project) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setEditingProject(project);
-    setIsModalOpen(true);
-  };
 
   const handleDelete = async (e, id) => {
     e.preventDefault();
@@ -69,48 +110,15 @@ export default function Projects() {
     }
   };
 
-  const handleSave = async (formData) => {
-    const payload = {
-      title: formData.title,
-      description: formData.description,
-      image: formData.image,
-      type: formData.type,
-      category: formData.category,
-      techstack: formData.techstack || [],
-      demo_link: formData.demoLink,
-      github: formData.github,
-      status: !!formData.status,
-    };
-
-    if (editingProject) {
-      const { data, error } = await supabase
-        .from("projects")
-        .update(payload)
-        .eq("id", editingProject.id)
-        .select();
-      if (error) throw error;
-
-      const returnedRow = (data && data.length > 0) ? data[0] : { ...editingProject, ...payload, demo_link: payload.demo_link };
-      const formatted = { ...returnedRow, demoLink: returnedRow.demo_link };
-      setProjects((prev) => prev.map((p) => (p.id === editingProject.id ? formatted : p)));
-    } else {
-      const { data, error } = await supabase
-        .from("projects")
-        .insert([payload])
-        .select();
-      if (error) throw error;
-
-      const returnedRow = (data && data.length > 0) ? data[0] : { id: Date.now(), ...payload, demo_link: payload.demo_link };
-      const formatted = { ...returnedRow, demoLink: returnedRow.demo_link };
-      setProjects((prev) => [formatted, ...prev]);
-    }
-  };
-
   // --- 2. Fetch Data ---
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const { data, error } = await supabase.from("projects").select("*").order("id", { ascending: false });
+        const { data, error } = await supabase
+          .from("projects")
+          .select("*")
+          .order("project_date", { ascending: false, nullsFirst: false })
+          .order("id", { ascending: false });
 
         if (error) throw error;
 
@@ -242,7 +250,7 @@ export default function Projects() {
 
         <motion.div layout="position" className="grid grid-cols-2 md:grid-cols-2 gap-2.5 md:gap-6">
           <AnimatePresence mode="popLayout">
-            {[...filteredProjects].map((project) => (
+            {[...filteredProjects].map((project, index) => (
               <motion.div
                 layout
                 variants={child}
@@ -254,96 +262,148 @@ export default function Projects() {
               >
                 {/* Perbaikan Typo: p-0! menjadi !p-0 */}
                 <SpotlightCard
-                  onClick={() => setPreviewProject(project)}
-                  className="custom-spotlight-card !p-0 flex flex-col gap-3 rounded-3xl h-full group relative cursor-pointer hover:border-neutral-700 transition-all duration-300"
+                  onClick={() => router.push(`/projects/${project.id}`)}
+                  className="custom-spotlight-card !p-0 flex flex-col rounded-3xl h-full group relative cursor-pointer hover:border-neutral-700/80 transition-all duration-300 bg-neutral-900/30 border border-neutral-800/60 shadow-lg"
                   spotlightColor="rgba(0, 229, 255, 0.15)"
                 >
+                  {/* Floating Live/In-Dev Status Badge */}
+                  <div className="absolute top-3 left-3 z-20 flex gap-2">
+                    {(() => {
+                      const config = getStatusConfig(project.status);
+                      return (
+                        <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold border backdrop-blur-md ${config.badgeClass}`}>
+                          <span className={`size-1.5 rounded-full ${config.dotClass}`}></span>
+                          {config.text}
+                        </div>
+                      );
+                    })()}
+                  </div>
+
+                  {/* Admin Controls */}
                   {isAdmin && (
-                    <div className="absolute top-3 right-3 z-20 flex gap-2">
+                    <div className="absolute top-3 right-3 z-20 flex gap-1.5">
                       <button
-                        onClick={(e) => handleOpenEdit(e, project)}
-                        className="p-1.5 rounded-lg bg-neutral-900/80 hover:bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-800 backdrop-blur transition-all cursor-pointer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          router.push(`/projects/${project.id}/edit`);
+                        }}
+                        className="p-2 rounded-full bg-neutral-900/80 hover:bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-800/80 backdrop-blur-md transition-all cursor-pointer active:scale-90"
                         title="Edit Project"
                       >
                         <Edit className="size-3.5" />
                       </button>
                       <button
                         onClick={(e) => handleDelete(e, project.id)}
-                        className="p-1.5 rounded-lg bg-neutral-900/80 hover:bg-red-950/80 text-neutral-300 hover:text-red-405 border border-neutral-800 hover:border-red-900 backdrop-blur transition-all cursor-pointer"
+                        className="p-2 rounded-full bg-neutral-900/80 hover:bg-red-950/80 text-neutral-300 hover:text-red-400 border border-neutral-800/80 hover:border-red-900/50 backdrop-blur-md transition-all cursor-pointer active:scale-90"
                         title="Delete Project"
                       >
                         <Trash2 className="size-3.5" />
                       </button>
                     </div>
                   )}
-                  <div className="relative w-full aspect-video rounded-t-3xl overflow-hidden border-b border-neutral-700/50 bg-neutral-900/50">
-                    {project.image && <Image src={project.image} alt={project.title} fill loading="lazy" className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-w-7xl) 33vw, 100vw" />}
+
+                  {/* Thumbnail Banner */}
+                  <div className="relative w-full aspect-video rounded-t-3xl overflow-hidden border-b border-neutral-800/60 bg-neutral-950/50">
+                    {project.image && (
+                      <Image
+                        src={project.image}
+                        alt={project.title}
+                        fill
+                        loading={index < 2 ? "eager" : "lazy"}
+                        priority={index < 2}
+                        className="object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out"
+                        sizes="(max-w-7xl) 33vw, 100vw"
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/40 via-transparent to-transparent opacity-60 pointer-events-none" />
                   </div>
 
-                  <div className="px-3 py-2.5 sm:px-5 sm:py-3 flex flex-col grow">
-                    <div className="flex flex-col gap-1 sm:gap-1.5">
-                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1 sm:gap-2">
-                        <h3 className="text-white font-medium text-xs sm:text-base md:text-lg tracking-tight leading-snug line-clamp-1" title={project.title}>
-                          {project.title}
-                        </h3>
-
-                        <div
-                          className={`flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-medium border whitespace-nowrap ${project.status ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10" : "border-neutral-500/30 text-neutral-400 bg-neutral-500/10"
-                            }`}
-                        >
-                          <span className={`size-1 sm:size-1.5 rounded-full ${project.status ? "bg-emerald-500 animate-pulse" : "bg-neutral-500"}`}></span>
-                          {project.status ? "Live" : "Not Live"}
-                        </div>
-                      </div>
-
-                      <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed line-clamp-2">{project.description}</p>
-
-                      {project.techstack && project.techstack.length > 0 && <p className="text-neutral-500 text-[10px] sm:text-xs mt-1 font-mono line-clamp-1 text-ellipsis">{project.techstack.join(" • ")}</p>}
+                  {/* Info Details Content */}
+                  <div className="px-5 py-5 flex flex-col grow gap-3">
+                    
+                    {/* Meta Badges Row */}
+                    <div className="flex gap-2 items-center flex-wrap">
+                      <span className="text-[9px] uppercase font-bold tracking-widest text-neutral-400 bg-neutral-800/60 border border-neutral-700/50 px-2 py-0.5 rounded">
+                        {project.type}
+                      </span>
+                      <span className="text-[9px] uppercase font-bold tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
+                        {project.category}
+                      </span>
                     </div>
 
-                    <div className="mt-auto flex flex-col pt-3 sm:pt-5 pb-1 sm:pb-2">
-                      <div className="flex w-full flex-wrap justify-start gap-1 sm:gap-2 mb-3 sm:mb-4">
-                        <Badge variant="secondary" className="text-[9px] sm:text-xs px-1.5 py-0.5 sm:px-2.5 sm:py-0.5 bg-neutral-800 text-neutral-300 border-neutral-700">
-                          {project.type}
-                        </Badge>
-                        <Badge variant="secondary" className="text-[9px] sm:text-xs px-1.5 py-0.5 sm:px-2.5 sm:py-0.5 bg-neutral-800 text-neutral-300 border-neutral-700">
-                          {project.category}
-                        </Badge>
-                      </div>
-
-                      <div>
-                        <hr className="border-neutral-700/80 mb-2 sm:mb-3" />
-
-                        <div className="flex items-center justify-between w-full gap-2">
-                          {project.github ? (
-                            <a
-                              href={project.github}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                              className="flex items-center gap-1 sm:gap-1.5 text-neutral-400 hover:text-white transition-colors duration-300 group/github"
-                            >
-                              <SiGithub className="size-3 sm:size-3.5" />
-                              <span className="text-[9px] sm:text-[11px] font-semibold tracking-wider sm:tracking-widest uppercase">Source</span>
-                            </a>
-                          ) : (
-                            <div />
-                          )}
-
-                          {project.demoLink && (
-                            <a
-                              href={project.demoLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                              className="flex items-center gap-0.5 sm:gap-1 text-emerald-500 hover:text-emerald-400 transition-colors duration-300 group/link"
-                            >
-                              <span className="text-[9px] sm:text-[11px] font-semibold tracking-wider sm:tracking-widest uppercase">Live Demo</span>
-                              <ArrowUpRight className="size-3 sm:size-4 transition-transform duration-300 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" />
-                            </a>
-                          )}
+                    {/* Title & Date */}
+                    <div className="space-y-1">
+                      <h3 className="text-white font-bold text-base sm:text-lg md:text-xl tracking-tight leading-snug line-clamp-1 group-hover:text-emerald-400 transition-colors duration-200" title={project.title}>
+                        {project.title}
+                      </h3>
+                      {project.project_date && (
+                        <div className="flex items-center gap-1.5 text-neutral-500 text-xs">
+                          <Calendar className="size-3.5" />
+                          <span>
+                            {new Date(project.project_date).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
+                          </span>
                         </div>
+                      )}
+                    </div>
+
+                    {/* Role */}
+                    {project.role && (
+                      <p className="text-neutral-400 text-xs font-medium line-clamp-1">
+                        <span className="text-neutral-500">Role:</span> {project.role}
+                      </p>
+                    )}
+
+                    {/* Description */}
+                    <p className="text-neutral-300/90 text-xs sm:text-sm leading-relaxed line-clamp-2">{project.description}</p>
+
+                    {/* Tech Stack Pills */}
+                    {project.techstack && project.techstack.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 pt-1">
+                        {project.techstack.slice(0, 3).map((tech) => (
+                          <span key={tech} className="text-[10px] bg-neutral-950 text-neutral-400 border border-neutral-850/80 px-2 py-0.5 rounded-md font-mono">
+                            {tech}
+                          </span>
+                        ))}
+                        {project.techstack.length > 3 && (
+                          <span className="text-[10px] text-neutral-500 px-1 py-0.5 font-mono">
+                            +{project.techstack.length - 3} more
+                          </span>
+                        )}
                       </div>
+                    )}
+
+                    {/* Actions Footer */}
+                    <div className="pt-3 border-t border-neutral-800/80 flex items-center justify-between w-full mt-auto">
+                      {project.github ? (
+                        <a
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-white transition-colors duration-300 group/github font-semibold"
+                        >
+                          <SiGithub className="size-4" />
+                          <span>Source</span>
+                        </a>
+                      ) : (
+                        <span className="text-[10px] text-neutral-600 font-medium italic">Private Repo</span>
+                      )}
+
+                      {project.demoLink ? (
+                        <a
+                          href={project.demoLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="flex items-center gap-0.5 text-xs text-emerald-400 hover:text-emerald-300 font-bold transition-colors duration-300 group/link"
+                        >
+                          <span>Live Demo</span>
+                          <ArrowUpRight className="size-3.5 transition-transform duration-300 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" />
+                        </a>
+                      ) : (
+                        <span className="text-[10px] text-neutral-600 font-medium">Demo Unavailable</span>
+                      )}
                     </div>
                   </div>
                 </SpotlightCard>
@@ -369,7 +429,7 @@ export default function Projects() {
           </div>
           {isAdmin && (
             <button
-              onClick={handleOpenAdd}
+              onClick={() => router.push("/projects/create")}
               className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-sm px-4 py-2.5 rounded-xl transition-all cursor-pointer shrink-0 shadow-lg shadow-emerald-600/10 active:scale-95"
             >
               <Plus className="size-4" />
@@ -381,148 +441,6 @@ export default function Projects() {
         <hr className="border-neutral-500 border-dashed" />
 
         <section className="space-y-6">{renderContent()}</section>
-
-        <CrudModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          title={editingProject ? "Edit Project" : "Add Project"}
-          onSubmit={handleSave}
-          initialData={editingProject}
-          fields={projectFields}
-        />
-
-        {/* Project Preview Lightbox / Details Modal */}
-        <AnimatePresence>
-          {previewProject && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-              {/* Backdrop */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                onClick={() => setPreviewProject(null)}
-                className="absolute inset-0 bg-neutral-950/85 backdrop-blur-md"
-              />
-
-              {/* Modal Box */}
-              <motion.div
-                initial={{ scale: 0.95, opacity: 0, y: 15 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.95, opacity: 0, y: 15 }}
-                transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className="relative bg-neutral-900 border border-neutral-805 rounded-[2rem] w-full max-w-4xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] z-10 flex flex-col md:flex-row max-h-[90vh] md:h-[550px]"
-              >
-                {/* Close Button (Floating Top Right of Card for easier tap/click) */}
-                <button
-                  onClick={() => setPreviewProject(null)}
-                  className="absolute top-4 right-4 z-40 p-2 rounded-full bg-neutral-950/80 border border-neutral-800 hover:bg-neutral-800 text-neutral-400 hover:text-white transition-all duration-200 cursor-pointer shadow-lg active:scale-95"
-                >
-                  <X className="size-4" />
-                </button>
-
-                {/* Left Side: Image Preview */}
-                <div className="w-full md:w-[55%] bg-neutral-950 flex items-center justify-center relative h-[250px] md:h-full overflow-hidden group/image">
-                  {previewProject.image ? (
-                    <div className="relative w-full h-full">
-                      <Image
-                        src={previewProject.image}
-                        alt={previewProject.title}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover/image:scale-105"
-                        sizes="(max-w-4xl) 55vw, 100vw"
-                        priority
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/50 via-transparent to-neutral-950/20 pointer-events-none" />
-                    </div>
-                  ) : (
-                    <div className="text-center py-12 text-neutral-500 flex flex-col items-center gap-3 w-full h-full justify-center">
-                      <ListFilter className="size-16 text-neutral-800" />
-                      <span>No project image uploaded</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Right Side: Details Info */}
-                <div className="w-full md:w-[45%] p-6 md:p-8 flex flex-col justify-between overflow-y-auto bg-neutral-900 relative border-t md:border-t-0 md:border-l border-neutral-800/80">
-                  <div className="space-y-6">
-                    {/* Header: Title and Badges */}
-                    <div className="space-y-3 pr-4">
-                      <div className="flex flex-wrap gap-1.5 items-center">
-                        <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">
-                          {previewProject.type}
-                        </span>
-                        <span className="text-[10px] uppercase font-bold tracking-widest text-neutral-300 bg-neutral-800 border border-neutral-700/80 px-2 py-0.5 rounded-md">
-                          {previewProject.category}
-                        </span>
-                      </div>
-
-                      <h3 className="text-2xl font-bold text-white tracking-tight leading-tight">
-                        {previewProject.title}
-                      </h3>
-
-                      <div className="flex items-center gap-2">
-                        <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${previewProject.status ? "border-emerald-500/20 text-emerald-400 bg-emerald-500/5" : "border-neutral-500/20 text-neutral-400 bg-neutral-800"
-                          }`}>
-                          <span className={`size-1.5 rounded-full ${previewProject.status ? "bg-emerald-500 animate-pulse" : "bg-neutral-500"}`}></span>
-                          {previewProject.status ? "Live Project" : "In Development"}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Description */}
-                    <div className="space-y-2">
-                      <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block">Description</span>
-                      <p className="text-neutral-300 text-sm leading-relaxed max-h-[160px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-neutral-800 scrollbar-track-transparent">
-                        {previewProject.description}
-                      </p>
-                    </div>
-
-                    {/* Tech Stack */}
-                    {previewProject.techstack && previewProject.techstack.length > 0 && (
-                      <div className="space-y-2">
-                        <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block">Tech Stack</span>
-                        <div className="flex flex-wrap gap-1.5">
-                          {previewProject.techstack.map((tech) => (
-                            <span key={tech} className="text-xs bg-neutral-950 text-neutral-300 border border-neutral-800/80 px-2.5 py-1 rounded-lg font-mono">
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Actions Footer */}
-                  <div className="mt-8 pt-4 border-t border-neutral-850 flex gap-3">
-                    {previewProject.github && (
-                      <a
-                        href={previewProject.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-neutral-200 hover:text-white transition-all text-sm font-medium border border-neutral-800 cursor-pointer active:scale-98"
-                      >
-                        <SiGithub className="size-4" />
-                        <span>Source Code</span>
-                      </a>
-                    )}
-                    {previewProject.demoLink && (
-                      <a
-                        href={previewProject.demoLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-all text-sm font-medium cursor-pointer shadow-lg shadow-emerald-600/10 active:scale-95"
-                      >
-                        <span>Live Demo</span>
-                        <ArrowUpRight className="size-4" />
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>
       </motion.div>
     </div>
   );
