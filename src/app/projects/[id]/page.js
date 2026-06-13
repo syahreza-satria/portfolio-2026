@@ -10,6 +10,7 @@ import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, Calendar, ExternalLink, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { SiGithub } from "react-icons/si";
 import { motion, AnimatePresence } from "motion/react";
+import SpotlightCard from "@/components/SpotlightCard";
 const getStatusConfig = (status) => {
   const s = String(status || "").toLowerCase();
   
