@@ -359,7 +359,7 @@ export default function Guestbook() {
                         {user && (
                           <button
                             onClick={() => setReplyingTo(msg)}
-                            className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-neutral-800 text-neutral-500 hover:text-neutral-300 transition-all duration-200 cursor-pointer"
+                            className="opacity-100 lg:opacity-0 lg:group-hover:opacity-100 p-1 rounded hover:bg-neutral-800 text-neutral-500 hover:text-neutral-300 transition-all duration-200 cursor-pointer"
                             title="Reply to message"
                           >
                             <CornerUpLeft className="size-3.5" />
@@ -370,7 +370,7 @@ export default function Guestbook() {
                         {(isAdmin || (user && user.id === msg.user_id)) && (
                           <button
                             onClick={() => handleDeleteMessage(msg.id)}
-                            className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-500/10 text-neutral-500 hover:text-red-400 transition-all duration-200 cursor-pointer ml-1"
+                            className="opacity-100 lg:opacity-0 lg:group-hover:opacity-100 p-1 rounded hover:bg-red-500/10 text-neutral-500 hover:text-red-400 transition-all duration-200 cursor-pointer ml-1"
                             title="Delete message"
                           >
                             <Trash2 className="size-3.5" />
