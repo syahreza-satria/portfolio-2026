@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
-import { PiHouse, PiUser, PiCertificate, PiProjectorScreenChart, PiFolderUser, PiLaptop, PiSignIn, PiSignOut, PiDownload } from "react-icons/pi";
+import { PiHouse, PiUser, PiCertificate, PiProjectorScreenChart, PiFolderUser, PiLaptop, PiSignIn, PiSignOut, PiDownload, PiChatText } from "react-icons/pi";
 import { RiVerifiedBadgeFill } from "react-icons/ri";
 import RotatingText from "../RotatingText";
 import { ArrowRight } from "lucide-react";
@@ -21,6 +21,7 @@ const SideNav = () => {
     { name: "Achievement", path: "/achievement", icon: <PiCertificate className="size-4.5" /> },
     { name: "Projects", path: "/projects", icon: <PiProjectorScreenChart className="size-4.5" /> },
     { name: "Gears", path: "/gears", icon: <PiLaptop className="size-4.5" /> },
+    { name: "Guestbook", path: "/guestbook", icon: <PiChatText className="size-4.5" /> },
     { name: "Contact", path: "/contact", icon: <PiFolderUser className="size-4.5" /> },
   ];
 
