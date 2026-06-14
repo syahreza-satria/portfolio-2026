@@ -277,7 +277,7 @@ export default function Guestbook() {
                       </div>
 
                       {/* Chat Bubble */}
-                      <div className="relative bg-neutral-900/60 border border-neutral-850 text-neutral-200 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm w-fit break-words">
+                      <div className="relative bg-neutral-900/60 border border-neutral-850 text-neutral-200 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-2xl rounded-tl-none text-xs sm:text-sm leading-relaxed shadow-sm w-fit break-words">
                         {/* Parent Quote Block */}
                         {parentMsg && (
                           <div
@@ -285,7 +285,7 @@ export default function Guestbook() {
                               const parentEl = document.getElementById(`msg-${msg.parent_id}`);
                               parentEl?.scrollIntoView({ behavior: "smooth", block: "center" });
                             }}
-                            className="bg-neutral-950/50 border-l-[3px] border-emerald-500 px-2.5 py-1.5 rounded-lg mb-2 text-xs flex flex-col gap-0.5 cursor-pointer max-w-full hover:bg-neutral-950/80 transition-colors"
+                            className="bg-neutral-950/50 border-l-[3px] border-emerald-500 px-2.5 py-1.5 rounded-lg mb-2 text-[10px] sm:text-xs flex flex-col gap-0.5 cursor-pointer max-w-full hover:bg-neutral-950/80 transition-colors"
                           >
                             <span className="font-bold text-emerald-400">
                               {parentMsg.user_name}

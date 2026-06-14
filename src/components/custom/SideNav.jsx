@@ -100,7 +100,7 @@ const SideNav = () => {
       </div>
 
       {/* --- MOBILE FLOATING BOTTOM DOCK --- */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex lg:hidden bg-neutral-950/85 backdrop-blur-xl border border-neutral-800/90 rounded-full px-3 py-2 shadow-2xl items-center gap-1 max-w-[95vw] w-fit">
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex lg:hidden bg-neutral-950/85 backdrop-blur-xl border border-neutral-800/90 rounded-full px-2 py-1.5 shadow-2xl items-center gap-0.5 max-w-[95vw] w-fit">
         {navItems.map((item, index) => {
           const isActive = pathname === item.path;
 
@@ -108,12 +108,12 @@ const SideNav = () => {
             <Link
               key={index}
               href={item.path}
-              className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full transition-all duration-300 relative ${isActive ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/20" : "text-neutral-400 hover:text-neutral-200 border border-transparent"
+              className={`flex items-center gap-1 px-2 py-1 rounded-full transition-all duration-300 relative ${isActive ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/20" : "text-neutral-400 hover:text-neutral-200 border border-transparent"
                 }`}
             >
               {item.icon}
               {isActive && (
-                <span className="text-[10px] font-bold tracking-tight uppercase pr-0.5">
+                <span className="text-[10px] font-bold tracking-tight uppercase pr-0.5 hidden sm:inline">
                   {item.name}
                 </span>
               )}
