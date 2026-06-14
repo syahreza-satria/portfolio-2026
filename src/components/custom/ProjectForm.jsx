@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Upload, Loader2, Plus, X } from "lucide-react";
+import { Upload, Loader2, Plus, X, ChevronLeft, ChevronRight, Move } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 export default function ProjectForm({ initialData = null, onSubmit, onCancel, buttonText = "Save Project" }) {
@@ -92,6 +92,8 @@ export default function ProjectForm({ initialData = null, onSubmit, onCancel, bu
     handleChange("gallery", arr);
   };
 
+  const [draggedIndex, setDraggedIndex] = useState(null);
+
   const handleFileUpload = async (file, isGallery = false) => {
     if (!file) return;
     if (isGallery) {
@@ -117,9 +119,11 @@ export default function ProjectForm({ initialData = null, onSubmit, onCancel, bu
       const { data: { publicUrl } } = supabase.storage.from(bucketName).getPublicUrl(filePath);
       
       if (isGallery) {
-        const newGallery = [...formData.gallery, publicUrl];
-        handleChange("gallery", newGallery);
-        setGalleryInput(newGallery.join(", "));
+        setFormData((prev) => {
+          const newGallery = [...prev.gallery, publicUrl];
+          setGalleryInput(newGallery.join(", "));
+          return { ...prev, gallery: newGallery };
+        });
       } else {
         handleChange("image", publicUrl);
       }
@@ -135,10 +139,88 @@ export default function ProjectForm({ initialData = null, onSubmit, onCancel, bu
     }
   };
 
+  const handleMultipleFileUploads = async (files) => {
+    if (!files || files.length === 0) return;
+    setUploadingGallery(true);
+    try {
+      const uploadPromises = Array.from(files).map(async (file) => {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+        const filePath = `uploads/${fileName}`;
+
+        let bucketName = "portfolio";
+        let { data, error } = await supabase.storage.from(bucketName).upload(filePath, file);
+        
+        if (error) {
+          bucketName = "uploads";
+          const retry = await supabase.storage.from(bucketName).upload(filePath, file);
+          if (retry.error) throw retry.error;
+          data = retry.data;
+        }
+
+        const { data: { publicUrl } } = supabase.storage.from(bucketName).getPublicUrl(filePath);
+        return publicUrl;
+      });
+
+      const publicUrls = await Promise.all(uploadPromises);
+      
+      setFormData((prev) => {
+        const newGallery = [...prev.gallery, ...publicUrls];
+        setGalleryInput(newGallery.join(", "));
+        return { ...prev, gallery: newGallery };
+      });
+    } catch (err) {
+      console.error("Upload error:", err.message);
+      alert("Failed to upload some gallery images. Error: " + err.message);
+    } finally {
+      setUploadingGallery(false);
+    }
+  };
+
   const handleRemoveGalleryImage = (indexToRemove) => {
     const newGallery = formData.gallery.filter((_, idx) => idx !== indexToRemove);
     handleChange("gallery", newGallery);
     setGalleryInput(newGallery.join(", "));
+  };
+
+  const handleMoveGalleryImage = (index, direction) => {
+    const newGallery = [...formData.gallery];
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= newGallery.length) return;
+
+    const temp = newGallery[index];
+    newGallery[index] = newGallery[targetIndex];
+    newGallery[targetIndex] = temp;
+
+    handleChange("gallery", newGallery);
+    setGalleryInput(newGallery.join(", "));
+  };
+
+  const handleDragStart = (e, index) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e, targetIndex) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === targetIndex) return;
+
+    const newGallery = [...formData.gallery];
+    const draggedItem = newGallery[draggedIndex];
+    newGallery.splice(draggedIndex, 1);
+    newGallery.splice(targetIndex, 0, draggedItem);
+
+    handleChange("gallery", newGallery);
+    setGalleryInput(newGallery.join(", "));
+    setDraggedIndex(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
   };
 
   const handleSubmit = async (e) => {
@@ -323,10 +405,7 @@ export default function ProjectForm({ initialData = null, onSubmit, onCancel, bu
                   type="file"
                   accept="image/*"
                   multiple
-                  onChange={(e) => {
-                    const files = Array.from(e.target.files);
-                    files.forEach(file => handleFileUpload(file, true));
-                  }}
+                  onChange={(e) => handleMultipleFileUploads(e.target.files)}
                   className="hidden"
                   id="gallery-file-input"
                   disabled={uploadingGallery}
@@ -345,21 +424,83 @@ export default function ProjectForm({ initialData = null, onSubmit, onCancel, bu
               </div>
             </div>
 
-            {/* Gallery Previews with delete button */}
+            {/* Gallery Previews with delete button and reordering */}
             {formData.gallery && formData.gallery.length > 0 && (
-              <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 p-3 bg-neutral-950/30 border border-neutral-800/50 rounded-2xl">
-                {formData.gallery.map((imgUrl, idx) => (
-                  <div key={idx} className="relative aspect-video rounded-lg overflow-hidden border border-neutral-750 bg-neutral-950 group">
-                    <img src={imgUrl} alt={`Screenshot ${idx + 1}`} className="w-full h-full object-cover" />
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveGalleryImage(idx)}
-                      className="absolute top-1 right-1 p-1 rounded-full bg-red-950/80 hover:bg-red-900 border border-red-900/50 text-white cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 p-3 bg-neutral-950/30 border border-neutral-800/50 rounded-2xl">
+                {formData.gallery.map((imgUrl, idx) => {
+                  const isDragged = draggedIndex === idx;
+                  return (
+                    <div
+                      key={idx}
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, idx)}
+                      onDragOver={(e) => handleDragOver(e, idx)}
+                      onDragEnd={handleDragEnd}
+                      onDrop={(e) => handleDrop(e, idx)}
+                      className={`relative aspect-video rounded-lg overflow-hidden border bg-neutral-950 group transition-all cursor-grab active:cursor-grabbing ${
+                        isDragged
+                          ? "border-emerald-500/50 opacity-40 scale-95"
+                          : "border-neutral-750 hover:border-neutral-600"
+                      }`}
                     >
-                      <X className="size-3" />
-                    </button>
-                  </div>
-                ))}
+                      <img src={imgUrl} alt={`Screenshot ${idx + 1}`} className="w-full h-full object-cover pointer-events-none" />
+                      
+                      {/* Drag handle icon / helper overlay on hover */}
+                      <div className="absolute inset-0 bg-neutral-950/40 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none flex items-center justify-center">
+                        <Move className="size-5 text-neutral-300 drop-shadow animate-pulse" />
+                      </div>
+
+                      {/* Index badge */}
+                      <div className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-neutral-900/80 border border-neutral-700/50 text-[10px] font-bold text-neutral-300 pointer-events-none">
+                        #{idx + 1}
+                      </div>
+
+                      {/* Reorder and Delete Controls */}
+                      <div className="absolute bottom-1.5 left-1.5 right-1.5 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-200 gap-1">
+                        <div className="flex gap-1">
+                          {idx > 0 && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleMoveGalleryImage(idx, -1);
+                              }}
+                              className="p-1 rounded bg-neutral-900/80 hover:bg-neutral-800 border border-neutral-700/50 text-neutral-300 cursor-pointer transition-colors"
+                              title="Move Left"
+                            >
+                              <ChevronLeft className="size-3" />
+                            </button>
+                          )}
+                          {idx < formData.gallery.length - 1 && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleMoveGalleryImage(idx, 1);
+                              }}
+                              className="p-1 rounded bg-neutral-900/80 hover:bg-neutral-800 border border-neutral-700/50 text-neutral-300 cursor-pointer transition-colors"
+                              title="Move Right"
+                            >
+                              <ChevronRight className="size-3" />
+                            </button>
+                          )}
+                        </div>
+                        
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRemoveGalleryImage(idx);
+                          }}
+                          className="p-1 rounded bg-red-950/80 hover:bg-red-900 border border-red-900/50 text-white cursor-pointer transition-colors"
+                          title="Remove Image"
+                        >
+                          <X className="size-3" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
