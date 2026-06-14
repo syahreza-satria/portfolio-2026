@@ -210,14 +210,14 @@ export default function Guestbook() {
   };
 
   return (
-    <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 px-4 lg:px-6">
+    <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 px-2 sm:px-4 lg:px-6">
       <SideNav />
 
       <motion.div
         animate={{ y: 0, opacity: 1 }}
         initial={{ y: 20, opacity: 0 }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
-        className="col-span-1 lg:col-span-9 w-full space-y-6 pb-16 flex flex-col h-[calc(100vh-8rem)] lg:h-[calc(100vh-4rem)]"
+        className="col-span-1 lg:col-span-9 w-full space-y-6 pb-24 lg:pb-16 flex flex-col h-[calc(100vh-7rem)] lg:h-[calc(100vh-4rem)]"
       >
         {/* Header */}
         <section className="flex flex-col gap-2 shrink-0">
@@ -233,7 +233,7 @@ export default function Guestbook() {
         <hr className="border-neutral-800 border-dashed shrink-0" />
 
         {/* Chat Feed */}
-        <div className="grow overflow-y-auto bg-neutral-900/20 border border-neutral-900 rounded-3xl p-4 sm:p-6 flex flex-col gap-6 scrollbar-thin scrollbar-thumb-neutral-800 scrollbar-track-transparent">
+        <div className="grow overflow-y-auto bg-transparent sm:bg-neutral-900/20 border-0 sm:border border-neutral-900 rounded-3xl p-1 sm:p-6 flex flex-col gap-6 scrollbar-thin scrollbar-thumb-neutral-800 scrollbar-track-transparent">
           {isLoading ? (
             <div className="grow flex flex-col items-center justify-center gap-2 text-neutral-500">
               <Loader2 className="size-8 animate-spin text-emerald-500" />
@@ -251,22 +251,22 @@ export default function Guestbook() {
                 const parentMsg = msg.parent_id ? messages.find((m) => m.id === msg.parent_id) : null;
 
                 return (
-                  <div key={msg.id} id={`msg-${msg.id}`} className="flex gap-4 group items-start scroll-mt-24">
+                  <div key={msg.id} id={`msg-${msg.id}`} className="flex gap-2.5 sm:gap-4 group items-start scroll-mt-24">
                     {/* User Avatar */}
                     {msg.user_avatar ? (
                       <img
                         src={msg.user_avatar}
                         alt={msg.user_name}
-                        className="size-10 rounded-full object-cover border border-neutral-800 shrink-0"
+                        className="size-8.5 sm:size-10 rounded-full object-cover border border-neutral-800 shrink-0"
                       />
                     ) : (
-                      <div className="size-10 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center text-xs font-bold text-neutral-300 uppercase shrink-0">
+                      <div className="size-8.5 sm:size-10 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center text-xs font-bold text-neutral-300 uppercase shrink-0">
                         {msg.user_name?.[0] || "?"}
                       </div>
                     )}
 
                     {/* Message Details */}
-                    <div className="flex flex-col gap-1.5 max-w-[85%] sm:max-w-[75%]">
+                    <div className="flex flex-col gap-1.5 max-w-[calc(100%-2.5rem)] sm:max-w-[75%]">
                       <div className="flex items-baseline gap-2 flex-wrap">
                         <span className="text-xs sm:text-sm font-bold text-neutral-200">
                           {msg.user_name}
@@ -277,7 +277,7 @@ export default function Guestbook() {
                       </div>
 
                       {/* Chat Bubble */}
-                      <div className="relative bg-neutral-900/60 border border-neutral-850 text-neutral-200 px-4 py-2.5 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm w-fit break-words">
+                      <div className="relative bg-neutral-900/60 border border-neutral-850 text-neutral-200 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm w-fit break-words">
                         {/* Parent Quote Block */}
                         {parentMsg && (
                           <div
