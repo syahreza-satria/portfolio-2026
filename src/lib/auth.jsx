@@ -40,10 +40,15 @@ export const AuthProvider = ({ children }) => {
       setUser(currentUser);
       setLoading(false);
 
-      if (initialChecked.current) {
-        if (event === "SIGNED_IN" && !prevUser.current && currentUser) {
+      if (event === "SIGNED_IN") {
+        const isLoggingIn = localStorage.getItem("supabase_login_intent") === "true";
+        if (isLoggingIn && currentUser) {
           showToast(`Welcome back, ${currentUser.user_metadata?.full_name || currentUser.email}!`, "success");
-        } else if (event === "SIGNED_OUT" && prevUser.current) {
+          localStorage.removeItem("supabase_login_intent");
+        }
+      } else if (event === "SIGNED_OUT") {
+        // Only trigger toast if there was a previous user logged in on this page session
+        if (prevUser.current) {
           showToast("You have successfully logged out.", "info");
         }
       }
@@ -58,13 +63,17 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const signInWithGoogle = async () => {
+    localStorage.setItem("supabase_login_intent", "true");
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: window.location.origin,
       },
     });
-    if (error) console.error("Error signing in with Google:", error.message);
+    if (error) {
+      console.error("Error signing in with Google:", error.message);
+      localStorage.removeItem("supabase_login_intent");
+    }
   };
 
   const signOut = async () => {
