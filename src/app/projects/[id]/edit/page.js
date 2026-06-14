@@ -61,7 +61,7 @@ export default function EditProject() {
       techstack: formData.techstack || [],
       demo_link: formData.demoLink,
       github: formData.github,
-      status: !!formData.status,
+      status: formData.status,
       role: formData.role,
       features: formData.features || [],
       gallery: formData.gallery || [],
