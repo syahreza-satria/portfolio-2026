@@ -29,7 +29,7 @@ The project is built on a modern frontend/backend stack:
     *   **Immersive Lightbox Preview**: A spring-animated detail modal showing the project's cover image, description, detailed tech stack, source code link, and live demo link.
 4.  **Admin CRUD Panel**:
     *   **Authentication**: Integrated Google OAuth via Supabase.
-    *   **Authorization**: Checks for the owner's email (`satriaeza221@gmail.com`) or specific admin roles to reveal admin actions.
+    *   **Authorization**: Checks for the owner's email (e.g. `<your-admin-email>`) or specific admin roles to reveal admin actions.
     *   **Real-time Modifying**: Interactive custom forms (`CrudModal`) to add, edit, or delete projects directly from the user interface.
 5.  **Real-time Guestbook Chat**:
     *   **OAuth Access**: Guests can log in instantly via Google OAuth to post messages.
@@ -119,9 +119,10 @@ create policy "Allow public read access" on projects
   for select using (true);
 
 -- Create Policy to allow authenticated admin to manage projects
+-- Note: Replace 'admin@example.com' with your actual admin email address
 create policy "Allow admin full access" on projects
   for all using (
-    auth.jwt() ->> 'email' = 'satriaeza221@gmail.com'
+    auth.jwt() ->> 'email' = 'admin@example.com'
   );
 
 -- 2. Create Guestbook Table
@@ -153,7 +154,7 @@ create policy "Allow authenticated update access" on guestbook
 create policy "Allow delete access" on guestbook
   for delete using (
     auth.uid() = user_id or 
-    auth.jwt() ->> 'email' = 'satriaeza221@gmail.com'
+    auth.jwt() ->> 'email' = 'admin@example.com'
   );
 
 -- Enable Realtime for the guestbook table
