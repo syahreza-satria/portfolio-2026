@@ -12,6 +12,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
+  metadataBase: new URL("https://syahreza-satria.xyz"),
   title: {
     default: "Syahreza Satria - Portfolio",
     template: "%s | Syahreza Satria",
@@ -20,7 +21,7 @@ export const metadata = {
   openGraph: {
     title: "Syahreza Satria - Portfolio",
     description: "Personal portfolio of Syahreza Satria, a software engineer crafting premium web experiences.",
-    url: "https://syahrezasatria.dev", // Replace with your production domain
+    url: "https://syahreza-satria.xyz", // Replace with your production domain
     siteName: "Syahreza Satria Portfolio",
     images: [
       {
