@@ -18,14 +18,32 @@ export const metadata = {
     template: "%s | Syahreza Satria",
   },
   description: "A personal portfolio of Syahreza Satria, a software engineer based in Indonesia, showcasing career milestones, certifications, and technical gears.",
+  keywords: [
+    "Syahreza Satria",
+    "Reza",
+    "Software Engineer",
+    "Full-stack Developer",
+    "Laravel",
+    "React",
+    "Next.js",
+    "Tailwind CSS",
+    "Flutter",
+    "Bandung",
+    "Indonesia",
+    "Web Developer Portfolio",
+    "UI Designer"
+  ],
+  authors: [{ name: "Syahreza Satria", url: "https://syahreza-satria.xyz" }],
+  creator: "Syahreza Satria",
+  publisher: "Syahreza Satria",
   openGraph: {
     title: "Syahreza Satria - Portfolio",
     description: "Personal portfolio of Syahreza Satria, a software engineer crafting premium web experiences.",
-    url: "https://syahreza-satria.xyz", // Replace with your production domain
+    url: "https://syahreza-satria.xyz",
     siteName: "Syahreza Satria Portfolio",
     images: [
       {
-        url: "/og-image.png", // Put a 1200x630 image at public/og-image.png
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Syahreza Satria Portfolio Preview",
