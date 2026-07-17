@@ -59,6 +59,10 @@ export const skillset = [
   { id: 19, name: "NPM", category: "Tools", icon: <SiNpm className="size-5 text-red-500" />, bgClass: "bg-red-500/30" },
   { id: 25, name: "Google Docs", category: "Tools", icon: <SiGoogledocs className="size-5 text-blue-500" />, bgClass: "bg-blue-500/20" },
   { id: 26, name: "Google Sheets", category: "Tools", icon: <SiGooglesheets className="size-5 text-green-500" />, bgClass: "bg-green-500/20" },
+  { id: 24, name: "Gemini", category: "Tools", icon: <SiGooglegemini className="size-5 text-indigo-400" />, bgClass: "bg-indigo-400/20" },
+  { id: 28, name: "ChatGPT", category: "Tools", icon: <RiOpenaiFill className="size-5 text-emerald-500" />, bgClass: "bg-emerald-500/20" },
+  { id: 29, name: "Claude", category: "Tools", icon: <SiAnthropic className="size-5 text-orange-400" />, bgClass: "bg-orange-500/25" },
+  { id: 30, name: "DeepSeek", category: "Tools", icon: <RiDeepseekFill className="size-5 text-blue-500" />, bgClass: "bg-blue-500/20" },
 
   // --- Mobile Development ---
   { id: 20, name: "Dart", category: "Mobile Development", icon: <SiDart className="size-5 text-cyan-500" />, bgClass: "bg-cyan-500/30" },
@@ -68,10 +72,4 @@ export const skillset = [
   { id: 22, name: "Figma", category: "Design", icon: <SiFigma className="size-5 text-pink-500" />, bgClass: "bg-pink-500/30" },
   { id: 23, name: "Adobe Photoshop", category: "Design", icon: <DiPhotoshop className="size-5 text-blue-600" />, bgClass: "bg-blue-600/30" },
   { id: 27, name: "Canva", category: "Design", icon: <SiCanvas className="size-5 text-purple-400" />, bgClass: "bg-purple-500/20" },
-
-  // --- AI ---
-  { id: 24, name: "Gemini", category: "AI", icon: <SiGooglegemini className="size-5 text-indigo-400" />, bgClass: "bg-indigo-400/20" },
-  { id: 28, name: "ChatGPT", category: "AI", icon: <RiOpenaiFill className="size-5 text-emerald-500" />, bgClass: "bg-emerald-500/20" },
-  { id: 29, name: "Claude", category: "AI", icon: <SiAnthropic className="size-5 text-orange-400" />, bgClass: "bg-orange-500/25" },
-  { id: 30, name: "DeepSeek", category: "AI", icon: <RiDeepseekFill className="size-5 text-blue-500" />, bgClass: "bg-blue-500/20" },
 ];
