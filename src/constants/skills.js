@@ -1,5 +1,6 @@
 import { DiPhotoshop } from "react-icons/di";
 import { FaPython } from "react-icons/fa";
+import { RiDeepseekFill } from "react-icons/ri";
 import {
   SiCanva,
   SiCss,
@@ -73,5 +74,5 @@ export const skillset = [
   { id: 24, name: "Gemini", category: "AI", icon: <SiGooglegemini className="size-5 text-indigo-400" />, bgClass: "bg-indigo-400/20" },
   { id: 28, name: "ChatGPT", category: "AI", icon: <SiOpenai className="size-5 text-emerald-500" />, bgClass: "bg-emerald-500/20" },
   { id: 29, name: "Claude", category: "AI", icon: <SiAnthropic className="size-5 text-orange-400" />, bgClass: "bg-orange-500/25" },
-  { id: 30, name: "DeepSeek", category: "AI", icon: <svg className="size-5 text-blue-500" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2c1.66 0 3 1.34 3 3v2c0 1.66-1.34 3-3 3zm1-5h-1v2h1c.55 0 1-.45 1-1v-1c0-.55-.45-1-1-1z" /></svg>, bgClass: "bg-blue-500/20" },
+  { id: 30, name: "DeepSeek", category: "AI", icon: <RiDeepseekFill className="size-5 text-blue-500" />, bgClass: "bg-blue-500/20" },
 ];
