@@ -1,8 +1,8 @@
 import { DiPhotoshop } from "react-icons/di";
 import { FaPython } from "react-icons/fa";
-import { RiDeepseekFill } from "react-icons/ri";
+import { RiDeepseekFill, RiOpenaiFill } from "react-icons/ri";
 import {
-  SiCanva,
+  SiCanvas,
   SiCss,
   SiDaisyui,
   SiDart,
@@ -27,7 +27,6 @@ import {
   SiSupabase,
   SiTailwindcss,
   SiVite,
-  SiOpenai,
   SiAnthropic,
 } from "react-icons/si";
 
@@ -68,11 +67,11 @@ export const skillset = [
   // --- Design ---
   { id: 22, name: "Figma", category: "Design", icon: <SiFigma className="size-5 text-pink-500" />, bgClass: "bg-pink-500/30" },
   { id: 23, name: "Adobe Photoshop", category: "Design", icon: <DiPhotoshop className="size-5 text-blue-600" />, bgClass: "bg-blue-600/30" },
-  { id: 27, name: "Canva", category: "Design", icon: <SiCanva className="size-5 text-purple-400" />, bgClass: "bg-purple-500/20" },
+  { id: 27, name: "Canva", category: "Design", icon: <SiCanvas className="size-5 text-purple-400" />, bgClass: "bg-purple-500/20" },
 
   // --- AI ---
   { id: 24, name: "Gemini", category: "AI", icon: <SiGooglegemini className="size-5 text-indigo-400" />, bgClass: "bg-indigo-400/20" },
-  { id: 28, name: "ChatGPT", category: "AI", icon: <SiOpenai className="size-5 text-emerald-500" />, bgClass: "bg-emerald-500/20" },
+  { id: 28, name: "ChatGPT", category: "AI", icon: <RiOpenaiFill className="size-5 text-emerald-500" />, bgClass: "bg-emerald-500/20" },
   { id: 29, name: "Claude", category: "AI", icon: <SiAnthropic className="size-5 text-orange-400" />, bgClass: "bg-orange-500/25" },
   { id: 30, name: "DeepSeek", category: "AI", icon: <RiDeepseekFill className="size-5 text-blue-500" />, bgClass: "bg-blue-500/20" },
 ];
