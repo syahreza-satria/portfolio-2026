@@ -7,8 +7,8 @@ import SideNav from "../../components/custom/SideNav";
 import { ArrowUpRight, Plus, Edit, Trash2, X } from "lucide-react";
 import Image from "next/image";
 import SpotlightCard from "@/components/SpotlightCard";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useAuth } from "@/lib/auth";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
+import { useAuth } from "@/hooks/useAuth";
 import CrudModal from "@/components/custom/CrudModal";
 
 export default function Gear() {

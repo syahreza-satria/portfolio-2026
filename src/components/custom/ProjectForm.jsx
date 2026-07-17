@@ -1,38 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Upload, Loader2, Plus, X, ChevronLeft, ChevronRight, Move } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import Image from "next/image";
 
 export default function ProjectForm({ initialData = null, onSubmit, onCancel, buttonText = "Save Project" }) {
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    image: "",
-    type: "Web App",
-    category: "Full-Stack Web",
-    techstack: [],
-    demoLink: "",
-    github: "",
-    status: "In Progress",
-    role: "",
-    features: [],
-    gallery: [],
-    project_date: "",
-  });
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [uploadingImage, setUploadingImage] = useState(false);
-  const [uploadingGallery, setUploadingGallery] = useState(false);
-  const [techstackInput, setTechstackInput] = useState("");
-  const [featuresInput, setFeaturesInput] = useState("");
-  const [galleryInput, setGalleryInput] = useState("");
-
-  const projectTypes = ["Web App", "Mobile App", "Design", "Library", "Other"];
-  const categories = ["Full-Stack Web", "UI/UX Design", "Mobile Development", "Frontend", "Backend", "AI / ML"];
-  const projectStatuses = ["In Progress", "Live", "Completed", "Design Phase", "Concept", "Archived", "Maintenance"];
-
-  useEffect(() => {
+  const [formData, setFormData] = useState(() => {
     if (initialData) {
       let currentStatus = "In Progress";
       if (initialData.status === true || String(initialData.status).toLowerCase() === 'true' || String(initialData.status).toLowerCase() === 'live') {
@@ -42,8 +16,7 @@ export default function ProjectForm({ initialData = null, onSubmit, onCancel, bu
       } else if (initialData.status) {
         currentStatus = initialData.status;
       }
-
-      setFormData({
+      return {
         title: initialData.title || "",
         description: initialData.description || "",
         image: initialData.image || "",
@@ -57,18 +30,37 @@ export default function ProjectForm({ initialData = null, onSubmit, onCancel, bu
         features: initialData.features || [],
         gallery: initialData.gallery || [],
         project_date: initialData.project_date || "",
-      });
-      if (initialData.techstack) {
-        setTechstackInput(initialData.techstack.join(", "));
-      }
-      if (initialData.features) {
-        setFeaturesInput(initialData.features.join(", "));
-      }
-      if (initialData.gallery) {
-        setGalleryInput(initialData.gallery.join(", "));
-      }
+      };
     }
-  }, [initialData]);
+    return {
+      title: "",
+      description: "",
+      image: "",
+      type: "Web App",
+      category: "Full-Stack Web",
+      techstack: [],
+      demoLink: "",
+      github: "",
+      status: "In Progress",
+      role: "",
+      features: [],
+      gallery: [],
+      project_date: "",
+    };
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingGallery, setUploadingGallery] = useState(false);
+  const [techstackInput, setTechstackInput] = useState(() => {
+    return (initialData && initialData.techstack) ? initialData.techstack.join(", ") : "";
+  });
+  const [featuresInput, setFeaturesInput] = useState(() => {
+    return (initialData && initialData.features) ? initialData.features.join(", ") : "";
+  });
+  const [galleryInput, setGalleryInput] = useState(() => {
+    return (initialData && initialData.gallery) ? initialData.gallery.join(", ") : "";
+  });
 
   const handleChange = (name, value) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -355,7 +347,7 @@ export default function ProjectForm({ initialData = null, onSubmit, onCancel, bu
 
             {formData.image && (
               <div className="relative size-12 shrink-0 rounded-xl overflow-hidden border border-neutral-750 bg-neutral-950 mx-auto sm:mx-0">
-                <img src={formData.image} alt="Preview" className="w-full h-full object-cover" />
+                <Image src={formData.image} alt="Preview" fill className="object-cover" />
               </div>
             )}
           </div>
@@ -443,7 +435,7 @@ export default function ProjectForm({ initialData = null, onSubmit, onCancel, bu
                           : "border-neutral-750 hover:border-neutral-600"
                       }`}
                     >
-                      <img src={imgUrl} alt={`Screenshot ${idx + 1}`} className="w-full h-full object-cover pointer-events-none" />
+                      <Image src={imgUrl} alt={`Screenshot ${idx + 1}`} fill className="object-cover pointer-events-none" />
                       
                       {/* Drag handle icon / helper overlay on hover */}
                       <div className="absolute inset-0 bg-neutral-950/40 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none flex items-center justify-center">

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/hooks/useAuth";
 import SideNav from "@/components/custom/SideNav";
 import ProjectForm from "@/components/custom/ProjectForm";
 import { supabase } from "@/lib/supabase";
@@ -140,7 +140,7 @@ export default function EditProject() {
 
           <div>
             <h1 className="text-2xl font-semibold tracking-tighter">Edit Project</h1>
-            <p className="text-neutral-400 text-sm">Update project details for "{project.title}"</p>
+            <p className="text-neutral-400 text-sm">Update project details for &quot;{project.title}&quot;</p>
           </div>
         </div>
 

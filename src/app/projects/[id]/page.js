@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import SideNav from "../../../components/custom/SideNav";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/Badge";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, Calendar, ExternalLink, ChevronLeft, ChevronRight, X } from "lucide-react";
@@ -202,9 +202,11 @@ export default function ProjectDetail() {
           {/* Main Visual Image Banner */}
           <div className="w-full overflow-hidden bg-neutral-950 border-b border-neutral-800/50 flex justify-center items-center">
             {project.image ? (
-              <img
+              <Image
                 src={project.image}
                 alt={project.title}
+                width={1200}
+                height={600}
                 className="w-full h-auto object-contain max-h-[600px]"
               />
             ) : (
@@ -373,7 +375,7 @@ export default function ProjectDetail() {
 
                 <div className="pt-4 border-t border-neutral-900 text-center">
                   <span className="text-xs text-neutral-500 block">
-                    Interested in similar projects? Let's connect!
+                    Interested in similar projects? Let&apos;s connect!
                   </span>
                   <Link
                     href="/contact"
@@ -443,10 +445,11 @@ export default function ProjectDetail() {
                 transition={{ duration: 0.25 }}
                 className="relative max-w-full max-h-[80vh] aspect-video w-full"
               >
-                <img
+                <Image
                   src={project.gallery[activeImageIndex]}
                   alt={`${project.title} screenshot ${activeImageIndex + 1}`}
-                  className="w-full h-full object-contain rounded-2xl border border-neutral-800"
+                  fill
+                  className="object-contain rounded-2xl border border-neutral-800"
                 />
               </motion.div>
 

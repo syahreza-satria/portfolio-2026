@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/hooks/useAuth";
+import Image from "next/image";
 import SideNav from "@/components/custom/SideNav";
 import { motion, AnimatePresence } from "motion/react";
 import { Trash2, Send, Smile, Loader2, CornerUpLeft, X } from "lucide-react";
@@ -254,9 +255,12 @@ export default function Guestbook() {
                   <div key={msg.id} id={`msg-${msg.id}`} className="flex gap-2.5 sm:gap-4 group items-start scroll-mt-24">
                     {/* User Avatar */}
                     {msg.user_avatar ? (
-                      <img
+                      <Image
                         src={msg.user_avatar}
                         alt={msg.user_name}
+                        width={40}
+                        height={40}
+                        unoptimized
                         className="size-8.5 sm:size-10 rounded-full object-cover border border-neutral-800 shrink-0"
                       />
                     ) : (
@@ -392,9 +396,12 @@ export default function Guestbook() {
             <form onSubmit={handleSendMessage} className="flex gap-2.5 items-end">
               {/* Profile Avatar */}
               {user.user_metadata?.avatar_url ? (
-                <img
+                <Image
                   src={user.user_metadata.avatar_url}
                   alt="My Profile"
+                  width={40}
+                  height={40}
+                  unoptimized
                   className="size-10 rounded-full border border-neutral-800 mb-1 hidden sm:block shrink-0"
                 />
               ) : (
@@ -467,8 +474,11 @@ export default function Guestbook() {
                 onClick={signInWithGoogle}
                 className="bg-neutral-800 hover:bg-neutral-750 text-neutral-200 border border-neutral-700 text-xs py-2 px-4 rounded-xl cursor-pointer font-medium hover:border-neutral-600 transition-all flex items-center gap-2 active:scale-95"
               >
-                <img
+                <Image
                   src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                  width={16}
+                  height={16}
+                  unoptimized
                   className="size-4"
                   alt="Google"
                 />

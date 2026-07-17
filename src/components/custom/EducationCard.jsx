@@ -47,7 +47,7 @@ const EducationCard = ({ data, onEdit, onDelete }) => {
         width={80}
         height={80}
         alt={`${data.school} Logo`}
-        className="rounded-2xl shrink-0 w-14 h-14 sm:w-20 sm:h-20 object-contain hover:scale-105 transition duration-300 bg-neutral-900/40 p-1"
+        className="rounded-2xl shrink-0 w-14 h-14 sm:w-20 sm:h-20 object-contain hover:scale-105 hover:bg-white transition duration-300 bg-neutral-900/40 p-1"
         loading="eager"
       />
 

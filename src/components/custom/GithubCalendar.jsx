@@ -9,7 +9,13 @@ const GithubCalendar = ({ username = "syahreza-satria" }) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    let active = true;
+    setTimeout(() => {
+      if (active) setMounted(true);
+    }, 0);
+    return () => {
+      active = false;
+    };
   }, []);
 
   const customTheme = {

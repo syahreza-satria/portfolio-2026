@@ -3,18 +3,18 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/Input";
 import SideNav from "../../components/custom/SideNav";
 import SpotlightCard from "@/components/SpotlightCard";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/Badge";
 import Image from "next/image";
 import { ArrowUpRight, Plus, Edit, Trash2, ListFilter, Calendar, ArrowUpDown } from "lucide-react";
 import { SiGithub } from "react-icons/si";
-import { child, parent } from "../../../animation";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { child, parent } from "@/constants/animation";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/Tabs";
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/DropdownMenu";
 import { motion, AnimatePresence } from "motion/react";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/hooks/useAuth";
 
 const getStatusConfig = (status) => {
   const s = String(status || "").toLowerCase();

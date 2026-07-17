@@ -3,15 +3,15 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/Input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import SideNav from "../../components/custom/SideNav";
 import SpotlightCard from "@/components/SpotlightCard";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/Badge";
 import Image from "next/image";
 import { ArrowUpRight, Plus, Edit, Trash2, X, Calendar, Award, Hash, ExternalLink, ShieldCheck } from "lucide-react";
-import { child, parent } from "../../../animation";
-import { useAuth } from "@/lib/auth";
+import { child, parent } from "@/constants/animation";
+import { useAuth } from "@/hooks/useAuth";
 import CrudModal from "@/components/custom/CrudModal";
 
 export default function Achievement() {
@@ -49,14 +49,13 @@ export default function Achievement() {
   const [sheenStyle, setSheenStyle] = useState({});
   const [previewAspect, setPreviewAspect] = useState(297 / 210);
 
-  useEffect(() => {
-    if (!previewAchievement) {
-      setRotateX(0);
-      setRotateY(0);
-      setSheenStyle({});
-      setPreviewAspect(297 / 210);
-    }
-  }, [previewAchievement]);
+  const handleClosePreview = () => {
+    setPreviewAchievement(null);
+    setRotateX(0);
+    setRotateY(0);
+    setSheenStyle({});
+    setPreviewAspect(297 / 210);
+  };
 
   const handleCardMouseMove = (e) => {
     const card = e.currentTarget;
@@ -392,7 +391,7 @@ export default function Achievement() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                onClick={() => setPreviewAchievement(null)}
+                onClick={handleClosePreview}
                 className="absolute inset-0 bg-neutral-950/85 backdrop-blur-md"
               />
 
@@ -406,7 +405,7 @@ export default function Achievement() {
               >
                 {/* Close Button (Floating Top Right of Card for easier tap/click) */}
                 <button
-                  onClick={() => setPreviewAchievement(null)}
+                  onClick={handleClosePreview}
                   className="absolute top-4 right-4 z-40 p-2 rounded-full bg-neutral-950/80 border border-neutral-800 hover:bg-neutral-800 text-neutral-400 hover:text-white transition-all duration-200 cursor-pointer shadow-lg active:scale-95"
                 >
                   <X className="size-4" />

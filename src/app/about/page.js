@@ -8,8 +8,8 @@ import { supabase } from "@/lib/supabase";
 import SideNav from "../../components/custom/SideNav";
 import ExperienceCard from "@/components/custom/ExperienceCard";
 import EducationCard from "@/components/custom/EducationCard";
-import { child, parent } from "../../../animation";
-import { useAuth } from "@/lib/auth";
+import { child, parent } from "@/constants/animation";
+import { useAuth } from "@/hooks/useAuth";
 import CrudModal from "@/components/custom/CrudModal";
 
 export default function About() {

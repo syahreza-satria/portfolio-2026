@@ -51,18 +51,20 @@ The project is built on a modern frontend/backend stack:
 ```text
 ├── public/                # Static assets, branding, and images
 └── src/
-    ├── app/               # Next.js App Router paths
+    ├── app/               # Next.js App Router paths (routing & pages)
     │   ├── about/         # Profile & resume info page
     │   ├── achievement/   # Certificates showcase
     │   ├── contact/       # Contact form & social connections
     │   ├── gears/         # Workspace setup & tech specs
     │   ├── guestbook/     # Real-time message board / chat
-    │   ├── projects/      # DB-connected projects page (with Admin CRUD)
-    │   └── data/          # Local static datasets (skills, experience, etc.)
+    │   └── projects/      # DB-connected projects page (with Admin CRUD)
     ├── components/        # Shared components
     │   ├── custom/        # Layout elements (SideNav, CrudModal, cards, etc.)
-    │   └── ui/            # Reusable UI primitives (Tabs, inputs, dropdowns)
-    └── lib/               # Utility functions (auth, Supabase client initialization)
+    │   └── ui/            # Reusable UI primitives (Tabs, Input, Select, DropdownMenu in PascalCase)
+    ├── constants/         # Static datasets and animation variants (data, animation)
+    ├── hooks/             # Custom React hooks (useAuth)
+    ├── providers/         # Global React context providers (AuthProvider)
+    └── lib/               # Utility functions (Supabase client initialization, cn class helper)
 ```
 
 ---

@@ -71,7 +71,7 @@ export const metadata = {
   },
 };
 
-import { AuthProvider } from "@/lib/auth";
+import { AuthProvider } from "@/providers/AuthProvider";
 import PageTransitionLoader from "@/components/custom/PageTransitionLoader";
 
 export default function RootLayout({ children }) {

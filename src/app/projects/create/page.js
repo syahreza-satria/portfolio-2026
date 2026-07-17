@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/hooks/useAuth";
 import SideNav from "@/components/custom/SideNav";
 import ProjectForm from "@/components/custom/ProjectForm";
 import { supabase } from "@/lib/supabase";

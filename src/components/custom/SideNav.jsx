@@ -9,7 +9,7 @@ import { RiVerifiedBadgeFill } from "react-icons/ri";
 import RotatingText from "../RotatingText";
 import { ArrowRight } from "lucide-react";
 import ShinyText from "../ShinyText";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/hooks/useAuth";
 
 const SideNav = () => {
   const pathname = usePathname();
@@ -71,7 +71,7 @@ const SideNav = () => {
         {/* Auth Button for Mobile */}
         <div className="shrink-0 flex items-center gap-2">
           <a
-            href="https://drive.google.com/file/d/1FrVRyBK6ipSknWWiitO170wY0bSlkaDn/view?usp=sharing"
+            href="https://drive.google.com/file/d/14riR0Zz1-02CrayQTaOxZ1Q-mYQHWVX4/view?usp=sharing"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs px-2.5 py-1.5 rounded-xl hover:bg-emerald-500/20 transition-colors cursor-pointer"
@@ -177,7 +177,7 @@ const SideNav = () => {
           {/* Download CV Button for Desktop */}
           <div className="w-full px-2">
             <a
-              href="https://drive.google.com/file/d/1FrVRyBK6ipSknWWiitO170wY0bSlkaDn/view?usp=sharing"
+              href="https://drive.google.com/file/d/14riR0Zz1-02CrayQTaOxZ1Q-mYQHWVX4/view?usp=sharing"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 w-full bg-emerald-600/10 border border-emerald-500/20 hover:bg-emerald-500/20 text-emerald-400 text-xs py-2.5 px-4 rounded-xl transition-all cursor-pointer font-medium hover:border-emerald-500/50 active:scale-95 text-center"
@@ -197,7 +197,7 @@ const SideNav = () => {
             <div className="flex flex-col gap-2 w-full">
               <div className="flex items-center gap-2 px-2 py-1.5 rounded-xl bg-neutral-800/20 border border-neutral-800/50">
                 {user.user_metadata?.avatar_url ? (
-                  <img src={user.user_metadata.avatar_url} className="size-6 rounded-full" alt="Avatar" />
+                  <Image src={user.user_metadata.avatar_url} width={24} height={24} className="size-6 rounded-full" alt="Avatar" unoptimized />
                 ) : (
                   <div className="size-6 rounded-full bg-neutral-700 flex items-center justify-center text-[10px] font-bold text-white uppercase shrink-0">
                     {user.email?.[0]}

@@ -4,37 +4,35 @@ import { useEffect, useState } from "react";
 import { X, Upload, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { supabase } from "@/lib/supabase";
+import Image from "next/image";
 
 export default function CrudModal({ isOpen, onClose, title, onSubmit, initialData = null, fields = [] }) {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState(() => {
+    if (initialData) return initialData;
+    const defaultData = {};
+    fields.forEach((f) => {
+      defaultData[f.name] = f.type === "checkbox" || f.type === "switch" ? false : f.type === "array" ? [] : "";
+    });
+    return defaultData;
+  });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadingField, setUploadingField] = useState(null);
-  const [arrayInputs, setArrayInputs] = useState({});
 
-  useEffect(() => {
-    if (initialData) {
-      setFormData(initialData);
-      const initialArrayInputs = {};
-      fields.forEach((f) => {
-        if (f.type === "array" && Array.isArray(initialData[f.name])) {
+  const [arrayInputs, setArrayInputs] = useState(() => {
+    const initialArrayInputs = {};
+    fields.forEach((f) => {
+      if (f.type === "array") {
+        if (initialData && Array.isArray(initialData[f.name])) {
           const sep = f.separator || ",";
           initialArrayInputs[f.name] = initialData[f.name].join(sep + " ");
-        }
-      });
-      setArrayInputs(initialArrayInputs);
-    } else {
-      const defaultData = {};
-      const initialArrayInputs = {};
-      fields.forEach((f) => {
-        defaultData[f.name] = f.type === "checkbox" || f.type === "switch" ? false : f.type === "array" ? [] : "";
-        if (f.type === "array") {
+        } else {
           initialArrayInputs[f.name] = "";
         }
-      });
-      setFormData(defaultData);
-      setArrayInputs(initialArrayInputs);
-    }
-  }, [initialData, isOpen, fields]);
+      }
+    });
+    return initialArrayInputs;
+  });
 
   const handleChange = (name, value) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -202,7 +200,7 @@ export default function CrudModal({ isOpen, onClose, title, onSubmit, initialDat
 
                         {formData[field.name] && (
                           <div className="relative size-9.5 shrink-0 rounded-lg overflow-hidden border border-neutral-700 bg-neutral-950">
-                            <img src={formData[field.name]} alt="Preview" className="w-full h-full object-cover" />
+                            <Image src={formData[field.name]} alt="Preview" fill className="object-cover" />
                           </div>
                         )}
                       </div>

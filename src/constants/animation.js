@@ -1,4 +1,4 @@
-// animation.js
+// src/constants/animation.js
 
 const parent = {
   hidden: { opacity: 0 },

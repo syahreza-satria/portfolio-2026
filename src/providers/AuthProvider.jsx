@@ -1,10 +1,10 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, useRef } from "react";
-import { supabase } from "./supabase";
+import { createContext, useEffect, useState, useRef } from "react";
+import { supabase } from "@/lib/supabase";
 import { motion, AnimatePresence } from "framer-motion";
 
-const AuthContext = createContext({});
+export const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -131,5 +131,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
-export const useAuth = () => useContext(AuthContext);

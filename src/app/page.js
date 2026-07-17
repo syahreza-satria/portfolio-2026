@@ -7,7 +7,7 @@ import { useState } from "react";
 import SideNav from "@/components/custom/SideNav";
 import { PiCode, PiVideo, PiDownload } from "react-icons/pi";
 import { SiGithub } from "react-icons/si";
-import { skillset } from "./data";
+import { skillset } from "@/constants/skills";
 import GithubCalendar from "@/components/custom/GithubCalendar";
 
 export default function Home() {
