@@ -73,6 +73,7 @@ export const metadata = {
 
 import { AuthProvider } from "@/providers/AuthProvider";
 import PageTransitionLoader from "@/components/custom/PageTransitionLoader";
+import { Analytics } from "@vercel/analytics/react";
 
 export default function RootLayout({ children }) {
   return (
@@ -81,6 +82,7 @@ export default function RootLayout({ children }) {
         <AuthProvider>
           <PageTransitionLoader />
           {children}
+          <Analytics />
         </AuthProvider>
       </body>
     </html>
