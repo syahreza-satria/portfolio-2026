@@ -82,6 +82,24 @@ const getStatusConfig = (status) => {
   };
 };
 
+const flipCardVariants = {
+  hidden: {
+    opacity: 0,
+    rotateY: -90,
+    transformPerspective: 1000,
+  },
+  show: (index) => ({
+    opacity: 1,
+    rotateY: 0,
+    transition: {
+      type: "spring",
+      damping: 15,
+      stiffness: 70,
+      delay: index * 0.08,
+    },
+  }),
+};
+
 export default function Projects() {
   const router = useRouter();
 
@@ -278,12 +296,14 @@ export default function Projects() {
             {sortedProjects.map((project, index) => (
               <motion.div
                 layout
-                variants={child}
+                variants={flipCardVariants}
+                custom={index}
                 initial="hidden"
                 animate="show"
                 exit={{ opacity: 0, scale: 0.9, y: 15, transition: { duration: 0.2 } }}
                 key={project.id}
                 className="h-full"
+                style={{ transformStyle: "preserve-3d" }}
               >
                 {/* Perbaikan Typo: p-0! menjadi !p-0 */}
                 <SpotlightCard

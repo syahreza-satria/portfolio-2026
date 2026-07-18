@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "motion/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { Input } from "@/components/ui/Input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
@@ -13,6 +13,10 @@ import { ArrowUpRight, Plus, Edit, Trash2, X, Calendar, Award, Hash, ExternalLin
 import { child, parent } from "@/constants/animation";
 import { useAuth } from "@/hooks/useAuth";
 import CrudModal from "@/components/custom/CrudModal";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Achievement() {
   // Format date
@@ -37,6 +41,18 @@ export default function Achievement() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
+
+  // --- 1.5. Derived State & Filter Logic ---
+  const uniqueTypes = ["All", ...new Set(achievements.map((item) => item.type))];
+  const uniqueCategories = ["All", ...new Set(achievements.map((item) => item.category))];
+
+  const filteredAchievements = achievements.filter((achieve) => {
+    const matchesSearch = achieve.title.toLowerCase().includes(searchQuery.toLowerCase()) || achieve.organizer.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesType = selectedType === "All" || achieve.type === selectedType;
+    const matchesCategory = selectedCategory === "All" || achieve.category === selectedCategory;
+
+    return matchesSearch && matchesType && matchesCategory;
+  });
 
   const { user, isAdmin } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -185,17 +201,37 @@ export default function Achievement() {
     fetchAchievements();
   }, []);
 
-  // --- 3. Filter Logic ---
-  const uniqueTypes = ["All", ...new Set(achievements.map((item) => item.type))];
-  const uniqueCategories = ["All", ...new Set(achievements.map((item) => item.category))];
+  // --- 2.5. Scroll-triggered Reveal (ScrollTrigger) Animation ---
+  const containerRef = useRef(null);
 
-  const filteredAchievements = achievements.filter((achieve) => {
-    const matchesSearch = achieve.title.toLowerCase().includes(searchQuery.toLowerCase()) || achieve.organizer.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesType = selectedType === "All" || achieve.type === selectedType;
-    const matchesCategory = selectedCategory === "All" || achieve.category === selectedCategory;
+  useEffect(() => {
+    if (isLoading) return;
 
-    return matchesSearch && matchesType && matchesCategory;
-  });
+    const ctx = gsap.context(() => {
+      const cards = gsap.utils.toArray(".achievement-card");
+      
+      // Reset state for reset/re-run of filter/search
+      gsap.set(cards, { opacity: 0, y: 40 });
+
+      cards.forEach((card) => {
+        gsap.to(card, {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 90%",
+            toggleActions: "play none none none",
+          },
+        });
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, [filteredAchievements, isLoading]);
+
+
 
   // --- 4. Fungsi Render Konten (Untuk handle Loading & Error tanpa merusak layout) ---
   const renderContent = () => {
@@ -282,9 +318,9 @@ export default function Achievement() {
         <p className="text-neutral-400 font-medium text-sm">Showing {filteredAchievements.length} achievements</p>
 
         {/* List Section */}
-        <motion.div variants={parent} initial="hidden" animate="show" className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2.5 md:gap-4">
+        <div ref={containerRef} className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2.5 md:gap-4">
           {[...filteredAchievements].map((achieve) => (
-            <motion.div variants={child} key={achieve.id} className="h-full">
+            <div key={achieve.id} className="achievement-card h-full">
               {/* Diperbaiki p-0! menjadi !p-0 */}
               <SpotlightCard
                 onClick={() => setPreviewAchievement(achieve)}
@@ -337,9 +373,9 @@ export default function Achievement() {
                   </div>
                 </div>
               </SpotlightCard>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
 
         {/* Empty State */}
         {filteredAchievements.length === 0 && <div className="w-full text-center py-12 text-neutral-500 bg-neutral-900/20 rounded-xl border border-neutral-800 border-dashed">No achievements found matching your criteria.</div>}
