@@ -5,6 +5,10 @@ import { Upload, Loader2, Plus, X, ChevronLeft, ChevronRight, Move } from "lucid
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 
+const projectTypes = ["Web App", "Design", "Mobile App", "Desktop App", "Other"];
+const categories = ["Full-Stack Web", "Frontend", "Backend", "UI/UX Design", "Mobile", "Other"];
+const projectStatuses = ["In Progress", "Live", "Completed", "Design Phase", "Concept", "Maintenance", "Archived"];
+
 export default function ProjectForm({ initialData = null, onSubmit, onCancel, buttonText = "Save Project" }) {
   const [formData, setFormData] = useState(() => {
     if (initialData) {
