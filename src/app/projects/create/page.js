@@ -12,7 +12,7 @@ import { motion } from "motion/react";
 
 export default function CreateProject() {
   const router = useRouter();
-  const { user, isAdmin, isLoading: authLoading } = useAuth();
+  const { user, isAdmin, loading: authLoading } = useAuth();
 
   useEffect(() => {
     if (!authLoading && !isAdmin) {

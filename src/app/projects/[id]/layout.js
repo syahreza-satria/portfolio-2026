@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase";
 
 export async function generateMetadata({ params }) {
-  const { id } = params;
+  const { id } = await params;
   try {
     const { data: project } = await supabase
       .from("projects")

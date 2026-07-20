@@ -15,7 +15,7 @@ export default function EditProject() {
   const router = useRouter();
   const id = params.id;
   
-  const { user, isAdmin, isLoading: authLoading } = useAuth();
+  const { user, isAdmin, loading: authLoading } = useAuth();
   
   const [project, setProject] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
