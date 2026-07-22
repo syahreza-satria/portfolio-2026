@@ -1,97 +1,93 @@
-# 🚀 Syahreza Satria's Developer Portfolio (2026 Edition)
+# Syahreza Satria's Developer Portfolio
 
-Welcome to the official repository of **Syahreza Satria's Portfolio**, a modern, responsive, and dynamic web application showcasing skills, professional experience, achievements, and projects. 
+A premium, interactive developer portfolio designed to showcase professional skills, projects, and achievements. This platform solves the challenge of presenting a developer's capabilities statically by providing an engaging, animated user interface combined with a real-time guestbook and a secure administrator dashboard for live content management.
 
-This portfolio features an immersive dark-mode aesthetic, micro-animations, full **CRUD (Create, Read, Update, Delete) project management**, and a **real-time interactive Guestbook chat** with a database backend.
-
----
-
-## 🛠️ Built With
-
-The project is built on a modern frontend/backend stack:
-
-*   **Framework**: [Next.js 16](https://nextjs.org/) (React 19 App Router)
-*   **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
-*   **Database & Authentication**: [Supabase](https://supabase.com/) (`@supabase/supabase-js`)
-*   **Animations**: [Motion](https://motion.dev/) (Framer Motion)
-*   **Icons**: [React Icons](https://react-icons.github.io/react-icons/) & [Lucide React](https://lucide.dev/)
-*   **UI Components**: [Shadcn UI](https://ui.shadcn.com/) & [Radix UI](https://www.radix-ui.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-blue?style=flat-square&logo=react)](https://react.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-Database%20%26%20Auth-emerald?style=flat-square&logo=supabase)](https://supabase.com/)
+[![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
 
 ---
 
-## ✨ Key Features
+## 🚀 Key Features
 
-1.  **Sleek Modern UI/UX**: Designed with vibrant custom gradient accents, glassmorphic navigations, interactive hover micro-animations, rotating text components, and shiny text highlights.
-2.  **Adaptive Navigation**: Uses a robust sticky sidebar on desktop screens and a floating dock/header for mobile and tablet devices.
-3.  **Supabase-Powered Dynamic Projects Showcase**:
-    *   **Search**: Instant client-side search across project titles and descriptions.
-    *   **Categorization & Filters**: Dynamic tabs to filter projects by Category (Full-Stack Web, UI/UX Design, Mobile Development, etc.) and Type (Web App, Mobile App, Design, etc.).
-    *   **Immersive Lightbox Preview**: A spring-animated detail modal showing the project's cover image, description, detailed tech stack, source code link, and live demo link.
-4.  **Admin CRUD Panel**:
-    *   **Authentication**: Integrated Google OAuth via Supabase.
-    *   **Authorization**: Checks for the owner's email (e.g. `<your-admin-email>`) or specific admin roles to reveal admin actions.
-    *   **Real-time Modifying**: Interactive custom forms (`CrudModal`) to add, edit, or delete projects directly from the user interface.
-5.  **Real-time Guestbook Chat**:
-    *   **OAuth Access**: Guests can log in instantly via Google OAuth to post messages.
-    *   **Real-time Feed**: Messages, replies, and reactions synchronize immediately across all screens without reloading using Supabase Postgres replication.
-    *   **Reactions**: Interactive emoji reactions with dynamic user count indicators.
-    *   **WhatsApp-style Replies**: Quote original messages and tap on quote boxes to smoothly scroll back to the original message.
-    *   **Self-Deletion & Admin Controls**: Users can delete their own posts, while the Admin has delete rights on all messages.
-6.  **Interactive Skillset Filtering**: Filter skillset items (HTML, Laravel, React, Node.js, Flutter, Figma, etc.) interactively with layout spring animations.
-7.  **Additional Sections**:
-    *   **About**: Career journey, education timeline, and detailed experience breakdown.
-    *   **Achievements**: Certification details, categories, and credentials.
-    *   **Gears**: A curated setup listing hardware and gear.
-    *   **Contact**: Built-in functional contact form.
+*   **Vibrant & Modern UI/UX**: Crafted with a premium dark-mode aesthetic, custom gradients, glassmorphism, spotlight card effects, and rotating/shiny text animations.
+*   **Adaptive Responsive Layout**: Implements a sticky side navigation for desktops and a fluid, responsive dock menu for mobile and tablet views.
+*   **Dynamic Project Gallery (Supabase-integrated)**:
+    *   **Live Search**: Instant client-side search across titles and descriptions.
+    *   **Categorized Filters**: Smooth tab-based filters for project categories (e.g., Full-Stack Web, Mobile, Design).
+    *   **Immersive Modal View**: Framer Motion animated modal detailing tech stacks, features, screenshots, and live demo links.
+*   **Admin CRUD Control Center**:
+    *   **Authentication & Authorization**: Integrated Google OAuth via Supabase checking for specific admin privileges.
+    *   **On-Site Editing**: Secure interactive modal forms (`CrudModal`) to add, update, or remove projects directly from the web interface.
+*   **Real-time Guestbook Chat**:
+    *   **Social Sign-In**: Quick Google OAuth sign-in for users to leave a message.
+    *   **Real-time Synchronization**: Live updates for new posts, replies, and reactions using Supabase Postgres replication.
+    *   **Interactive Reactions**: Add emoji reactions with live count badge updates.
+    *   **Threaded Replies**: Quote parent messages and easily jump to the referenced message.
+*   **Interactive Skillset Grid**: Interactive filtering of skills and tools with layout-preserving spring animations.
+*   **Comprehensive Sections**: Curated pages for *About Me* (education/career timeline), *Achievements* (credential listings), *Gears* (workspace setup details), and *Contact*.
 
 ---
 
-## 📂 Project Structure
+## 🛠️ Tech Stack
 
-```text
-├── public/                # Static assets, branding, and images
-└── src/
-    ├── app/               # Next.js App Router paths (routing & pages)
-    │   ├── about/         # Profile & resume info page
-    │   ├── achievement/   # Certificates showcase
-    │   ├── contact/       # Contact form & social connections
-    │   ├── gears/         # Workspace setup & tech specs
-    │   ├── guestbook/     # Real-time message board / chat
-    │   └── projects/      # DB-connected projects page (with Admin CRUD)
-    ├── components/        # Shared components
-    │   ├── custom/        # Layout elements (SideNav, CrudModal, cards, etc.)
-    │   └── ui/            # Reusable UI primitives (Tabs, Input, Select, DropdownMenu in PascalCase)
-    ├── constants/         # Static datasets and animation variants (data, animation)
-    ├── hooks/             # Custom React hooks (useAuth)
-    ├── providers/         # Global React context providers (AuthProvider)
-    └── lib/               # Utility functions (Supabase client initialization, cn class helper)
-```
+*   **Frontend Core**: Next.js 16 (App Router), React 19
+*   **Styling & UI**: Tailwind CSS v4, Radix UI, Shadcn UI
+*   **Animations**: Motion (Framer Motion), GSAP
+*   **Database & Real-time**: Supabase Database, Supabase Realtime Channels
+*   **Authentication**: Supabase Auth (Google OAuth)
+*   **Icons**: Lucide React, React Icons
 
 ---
 
-## 🚀 How to Run Locally
+## 📸 Screenshots / Demo
 
-### 1. Prerequisites
-Ensure you have the following installed on your machine:
-*   [Node.js](https://nodejs.org/) (v18.x or newer recommended)
-*   [NPM](https://www.npmjs.com/) or another package manager (Yarn, PNPM, Bun)
-*   A [Supabase](https://supabase.com/) account and project.
+*Stay tuned! Screenshots and demo previews will be added here shortly.*
 
-### 2. Clone the Repository
+*   **Desktop Dashboard Preview**:
+    `![Desktop UI Preview Placeholder](https://placehold.co/800x450/0f0f10/ffffff?text=Desktop+UI+Preview)`
+*   **Real-time Guestbook**:
+    `![Guestbook Preview Placeholder](https://placehold.co/800x450/0f0f10/ffffff?text=Real-time+Guestbook+Preview)`
+
+---
+
+## 📋 Prerequisites
+
+Before setting up the project, make sure you have the following installed:
+*   **Node.js**: `v18.x` or newer (recommended: `v20.x` or higher)
+*   **NPM**: `v9.x` or newer (or Yarn / PNPM / Bun)
+*   A **Supabase** account and active project instance
+
+---
+
+## ⚙️ Installation
+
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/syahreza-satria/portfolio-2026.git
 cd portfolio-2026
 ```
 
+### 2. Install Dependencies
+```bash
+npm install
+```
+
 ### 3. Setup Environment Variables
-Create a `.env` or `.env.local` file in the root directory and add your Supabase credentials:
+Duplicate the `.env.example` file and rename it to `.env`:
+```bash
+cp .env.example .env
+```
+Open `.env` and fill in your Supabase project API credentials:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-project-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 ```
 
-### 4. Create the Supabase Database Schema
-To support both the dynamic projects showcase and the real-time guestbook, execute the following SQL scripts inside your Supabase project's **SQL Editor**:
+### 4. Supabase Schema Migration
+In your **Supabase SQL Editor**, execute the following scripts to provision the tables, Row Level Security (RLS) policies, and database replication:
 
 ```sql
 -- 1. Create Projects Table
@@ -113,18 +109,16 @@ create table projects (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- Enable RLS (Row Level Security) on projects
+-- Enable Row Level Security (RLS)
 alter table projects enable row level security;
 
--- Create Policy to allow anyone to read projects
+-- Create Policies for Projects
 create policy "Allow public read access" on projects
   for select using (true);
 
--- Create Policy to allow authenticated admin to manage projects
--- Note: Replace 'admin@example.com' with your actual admin email address
 create policy "Allow admin full access" on projects
   for all using (
-    auth.jwt() ->> 'email' = 'admin@example.com'
+    auth.jwt() ->> 'email' = 'admin@example.com' -- Replace with your actual admin email
   );
 
 -- 2. Create Guestbook Table
@@ -140,10 +134,10 @@ create table guestbook (
   parent_id bigint references guestbook(id) on delete set null
 );
 
--- Enable RLS on guestbook
+-- Enable RLS on Guestbook
 alter table guestbook enable row level security;
 
--- Create policies for guestbook
+-- Create Policies for Guestbook
 create policy "Allow public read access" on guestbook
   for select using (true);
 
@@ -156,45 +150,85 @@ create policy "Allow authenticated update access" on guestbook
 create policy "Allow delete access" on guestbook
   for delete using (
     auth.uid() = user_id or 
-    auth.jwt() ->> 'email' = 'admin@example.com'
+    auth.jwt() ->> 'email' = 'admin@example.com' -- Replace with your actual admin email
   );
 
--- Enable Realtime for the guestbook table
+-- Enable Realtime replication
 alter publication supabase_realtime add table public.guestbook;
 ```
 
 ### 5. Setup Google OAuth in Supabase
-To enable the Auth and Guestbook features:
-1.  Go to **Supabase Dashboard** -> **Authentication** -> **Providers**.
-2.  Enable **Google** and enter your Google OAuth client ID and secret (obtained from the [Google Cloud Console](https://console.cloud.google.com/)).
-3.  Add the redirect URI provided by Supabase back into your Google Cloud console credentials.
-
-### 6. Install Dependencies
-```bash
-npm install
-```
-
-### 7. Run the Development Server
-```bash
-npm run dev
-```
-Open [http://localhost:3000](http://localhost:3000) with your browser to view the portfolio.
+1. Go to **Supabase Dashboard** -> **Authentication** -> **Providers**.
+2. Select **Google**, toggle it **Enabled**, and fill in your Client ID and Client Secret from the [Google Cloud Console](https://console.cloud.google.com/).
+3. Add the redirect URI provided by Supabase back to your Google Cloud Console credentials.
 
 ---
 
-## 📦 Production Deployment
+## 🏃 Running the Application
 
-To build and run the optimized production bundle:
+### Development Server
+Start the local server with hot-reloading:
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) to view the application in your browser.
 
+### Production Build
+Generate an optimized production build:
 ```bash
 npm run build
+```
+
+### Start Production Server
+Run the compiled code locally:
+```bash
 npm run start
 ```
 
-You can easily deploy this repository on hosting platforms like [Vercel](https://vercel.com/), [Netlify](https://netlify.com/), or [Render](https://render.com/). Be sure to inject your environment variables (`NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`) in the platform settings.
+---
+
+## 📂 Project Structure
+
+```text
+├── public/                 # Static assets (images, icons, favicon)
+└── src/
+    ├── app/                # Next.js App Router (pages and layouts)
+    │   ├── about/          # Career timeline & bio
+    │   ├── achievement/    # Certificates list
+    │   ├── contact/        # Contact form page
+    │   ├── gears/          # Workspace tech specs & equipment
+    │   ├── guestbook/      # Real-time chat & guest posts
+    │   └── projects/       # Database showcase with admin CRUD modal
+    ├── components/         # React Components
+    │   ├── custom/         # UI layouts (SideNav, forms, transition loaders)
+    │   └── ui/             # Radix & Shadcn based UI primitives
+    ├── constants/          # Application-wide static data & animations
+    ├── hooks/              # Custom React hooks (useAuth)
+    ├── lib/                # Shared utilities (supabase connection, class merges)
+    └── providers/          # Global context providers (AuthProvider)
+```
+
+---
+
+## 🔒 Environment Variables
+
+Ensure these environment variables are defined in your deployment settings or `.env` file:
+
+| Variable Name | Description | Example / Format |
+| :--- | :--- | :--- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase project URL endpoint | `https://your-project.supabase.co` |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY`| Your Supabase public API access key | `eyJhbGciOiJIUzI1Ni...` |
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - feel free to use and modify it for your own personal portfolio.
+This project is licensed under the MIT License. Feel free to copy, modify, and use it for your own web development portfolio.
+
+---
+
+## ✉️ Author / Contact
+
+*   **Developer**: Syahreza Satria
+*   **Location**: Bandung, Indonesia
+*   **GitHub**: [@syahreza-satria](https://github.com/syahreza-satria)
