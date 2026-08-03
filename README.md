@@ -10,6 +10,17 @@ A premium, interactive developer portfolio designed to showcase professional ski
 
 ---
 
+## 💡 Why This Project Exists
+
+The primary motivation behind this portfolio is to break away from traditional, static resumes. In today's fast-paced digital landscape, a developer's true capabilities are best demonstrated through live, interactive experiences rather than plain text. 
+
+This project was built to:
+* **Showcase Full-Stack Proficiency:** Go beyond a simple landing page by integrating a real-time guestbook and a complete custom CRUD dashboard with secure authentication.
+* **Experiment with Modern Technologies:** Serve as a practical playground for implementing Next.js 16 (App Router), Supabase real-time capabilities, and complex UI animations (Framer Motion).
+* **Create a Living Digital Identity:** Provide a centralized, easily updatable platform that evolves alongside my career, skills, and projects, ensuring visitors always see the most current representation of my professional journey.
+
+---
+
 ## 🚀 Key Features
 
 *   **Vibrant & Modern UI/UX**: Crafted with a premium dark-mode aesthetic, custom gradients, glassmorphism, spotlight card effects, and rotating/shiny text animations.
